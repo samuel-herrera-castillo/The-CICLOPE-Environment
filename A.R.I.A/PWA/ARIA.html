@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#ffffff"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="A.R.I.A"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f3f4f6' rx='20'/><text y='.9em' font-size='80' x='10'>📱</text></svg>"/>
+<title>A.R.I.A — Investigación Cualitativa</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-tap-highlight-color:transparent}
+body{background:#ffffff;color:#1f2937;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+textarea{resize:vertical}
+audio,video{accent-color:#4b5563}
+select option{background:#f3f4f6;color:#1f2937}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#f3f4f6}::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:2px}
+
+/* LANG SCREEN */
+#lang-screen{position:fixed;inset:0;background:linear-gradient(135deg,#ffffff,#f9fafb,#f3f4f6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;flex-direction:column;transition:opacity .4s}
+.lang-logo{font-size:64px;margin-bottom:14px;animation:floatUp 3s ease-in-out infinite}
+.lang-title{font-size:38px;font-weight:800;color:#374151;letter-spacing:.06em;margin-bottom:4px}
+.lang-sub{font-size:12px;color:#6b7280;margin-bottom:36px;letter-spacing:.1em;text-align:center}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:380px}
+.lang-btn{background:#f3f4f6;border:2px solid #d1d5db;border-radius:16px;padding:22px 14px;cursor:pointer;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:7px}
+.lang-btn:active{transform:scale(.97)}
+.lang-flag{font-size:34px;line-height:1}
+.lang-name{color:#111827;font-size:15px;font-weight:700}
+.lang-native{color:#6b7280;font-size:11px}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* INSTALL BANNER */
+#install-banner{display:none;align-items:center;gap:10px;background:#f3f4f6;border-bottom:1px solid #9ca3af55;padding:10px 16px;position:sticky;top:0;z-index:300}
+#install-banner span{flex:1;color:#374151;font-size:13px}
+#btn-install{background:#374151;border:none;color:#ffffff;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700}
+#btn-dismiss{background:none;border:none;color:#6b7280;font-size:20px;padding:0 4px}
+
+/* HEADER */
+.app-header{background:linear-gradient(160deg,#ffffff,#f9fafb);border-bottom:1px solid #e5e7eb;padding:16px;padding-top:max(16px,env(safe-area-inset-top))}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand .eyebrow{font-size:10px;color:#374151;letter-spacing:.18em;margin-bottom:4px;font-weight:600}
+.brand h1{font-size:34px;font-weight:800;color:#111827;letter-spacing:.04em;line-height:1}
+.brand p{color:#9ca3af;font-size:11px;margin-top:2px}
+.app-fullname{color:#6b7280;font-size:11px;margin-top:5px;letter-spacing:.02em}
+.app-fullname b{color:#374151;font-weight:800}
+.hdr-btns{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.btn-new-hdr{background:#374151;border:none;color:#ffffff;border-radius:9px;padding:9px 14px;font-size:13px;font-weight:700}
+.btn-exp-hdr{background:transparent;border:1px solid #d1d5db;color:#4b5563;border-radius:9px;padding:9px 10px;font-size:12px}
+.btn-imp-hdr{background:transparent;border:1px solid #e5e7eb;color:#4b5563;border-radius:9px;padding:9px 10px;font-size:12px}
+.btn-lang-hdr{background:transparent;border:1px solid #9ca3af;color:#4b5563;border-radius:9px;padding:9px 10px;font-size:14px;cursor:pointer}
+.btn-install-hdr{background:#374151;border:1px solid #374151;color:#fff;border-radius:9px;padding:9px 10px;font-size:14px;cursor:pointer}
+.btn-install-hdr:active{transform:scale(.96)}
+.stats-row{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap}
+.stat .n{font-size:18px;font-weight:700}
+.stat .l{font-size:9px;color:#9ca3af;letter-spacing:.08em;text-transform:uppercase}
+
+/* FILTER BAR */
+.filter-bar{background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:10px 16px;position:sticky;top:0;z-index:99}
+#search{width:100%;background:#ffffff;border:1px solid #d1d5db;border-radius:8px;color:#1f2937;padding:8px 12px;font-size:13px;outline:none;margin-bottom:8px}
+#search:focus{border-color:#374151}
+.fpills{display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto;padding-bottom:2px}
+.fpill{background:#f3f4f6;border:1px solid #d1d5db;color:#6b7280;border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600;white-space:nowrap;transition:all .2s}
+.fpill.active{background:#374151;color:#ffffff;border-color:transparent}
+
+/* ENTRIES */
+#entries{padding:14px 14px max(14px,env(safe-area-inset-bottom));max-width:700px;margin:0 auto}
+.empty{text-align:center;padding:60px 20px}
+.empty .ei{font-size:52px;margin-bottom:12px}
+.empty .et{color:#6b7280;font-size:16px;margin-bottom:6px}
+.empty .es{color:#9ca3af;font-size:12px;margin-bottom:22px}
+.empty-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.no-results{text-align:center;color:#9ca3af;font-size:13px;padding:40px;font-style:italic}
+
+/* ENTRY CARD */
+.ecard{background:#f3f4f6;border-radius:12px;margin-bottom:12px;overflow:hidden;border:1px solid #e5e7eb}
+.card-hdr{display:flex;align-items:center;gap:8px;padding:11px 13px;background:#f9fafb;cursor:pointer;user-select:none}
+.card-icon{font-size:18px;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-title{color:#111827;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-sub{color:#9ca3af;font-size:10px;margin-top:1px}
+.card-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.cbadge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap}
+.saved-badge{background:#e5e7eb;color:#4b5563;font-size:9px;padding:2px 6px;border-radius:10px}
+.btn-save-sm{background:#e5e7eb;border:1px solid #e5e7eb;color:#4b5563;border-radius:6px;padding:5px 7px;font-size:12px}
+.btn-del-sm{background:transparent;border:1px solid #d1d5db;color:#4b5563;border-radius:6px;padding:5px 7px;font-size:12px}
+.chevron{color:#9ca3af;font-size:11px}
+.card-body{padding:14px}
+
+/* FIELDS */
+.fwrap{margin-bottom:14px}
+.flabel{color:#4b5563;font-size:10px;display:block;margin-bottom:5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
+.finput{width:100%;background:#ffffff;border:1px solid #d1d5db;border-radius:8px;color:#1f2937;padding:9px 11px;font-size:14px;outline:none;transition:border-color .2s}
+.finput:focus{border-color:#374151}
+textarea.finput{line-height:1.6;min-height:70px}
+select.finput{cursor:pointer}
+.pill-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.pill{background:#f3f4f6;border:1px solid #d1d5db;color:#6b7280;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;transition:all .2s}
+.pill.on{background:#374151;color:#ffffff;border-color:transparent}
+
+/* AUDIO */
+.abox{background:#f9fafb;border:1px solid #d1d5db;border-radius:10px;padding:12px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.rec-status{color:#4b5563;font-size:12px;margin-bottom:6px;display:none;align-items:center;gap:6px}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#4b5563;display:inline-block;animation:pulse 1s infinite}
+.rec-timer{font-size:12px}
+.audio-item{background:#ffffff;border:1px solid #d1d5db;border-radius:8px;padding:8px;margin-bottom:6px}
+.audio-name{color:#6b7280;font-size:11px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px}
+audio.aplayer{height:32px;width:100%}
+.del-btn{background:none;border:none;color:#4b5563;font-size:15px;padding:2px 4px;float:right;cursor:pointer}
+.hint{color:#9ca3af;font-size:12px;padding:8px 0;text-align:center}
+
+/* EVIDENCE */
+.evbox{background:#f9fafb;border:1px solid #d1d5db;border-radius:10px;padding:12px}
+.live-prev{width:100%;max-height:200px;border-radius:8px;border:2px solid #9ca3af;margin-bottom:8px;background:#e5e7eb;display:none}
+.ev-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ev-card{position:relative;background:#ffffff;border:1px solid #d1d5db;border-radius:8px;overflow:hidden;width:calc(33% - 6px);min-width:90px}
+.ev-img,.ev-vid{width:100%;height:75px;object-fit:cover;display:block}
+.ev-vid{background:#e5e7eb}
+.ev-aud-icon{font-size:20px;text-align:center;padding:8px 0 4px}
+.ev-aud{height:28px;width:100%}
+.ev-name{padding:3px 5px;font-size:9px;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.75);border:none;color:#4b5563;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* Q&A */
+.qa-add{display:flex;gap:8px;margin-bottom:10px}
+.qa-list{display:flex;flex-direction:column;gap:8px}
+.qa-card{background:#ffffff;border:1px solid #d1d5db;border-radius:10px;padding:12px}
+.qa-hdr{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.qa-num{background:#374151;color:#ffffff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.qa-txt{flex:1;color:#1f2937;font-size:13px;line-height:1.5}
+
+/* BUTTONS */
+.btn{border:none;color:#1f2937;border-radius:8px;padding:7px 12px;font-size:12px;white-space:nowrap;cursor:pointer}
+.btn-amber{background:#374151;color:#ffffff;font-weight:700}
+.btn-green{background:#e5e7eb;color:#4b5563}
+.btn-blue{background:#d1d5db;color:#9ca3af}
+.btn-purple{background:#e5e7eb;color:#9ca3af}
+.btn-green2{background:#e5e7eb;border:1px solid #e5e7eb;color:#4b5563}
+.btn-vid{background:#e5e7eb;color:#9ca3af}
+.btn-cancel{background:transparent;border:1px solid #d1d5db;color:#6b7280;border-radius:8px;padding:9px 14px;font-size:13px}
+.btn-cancel-w{background:transparent;border:1px solid #d1d5db;color:#6b7280;border-radius:8px;padding:9px;width:100%;font-size:13px;margin-top:6px;cursor:pointer}
+
+/* MAP */
+.map-container{border-radius:10px;overflow:hidden;border:1px solid #d1d5db;margin-bottom:14px}
+.map-toolbar{background:#f9fafb;border:1px solid #d1d5db;border-radius:10px;padding:10px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.map-tool-btn{border:1px solid #d1d5db;color:#1f2937;border-radius:8px;padding:6px 11px;font-size:12px;cursor:pointer;background:#f3f4f6;transition:all .2s}
+.map-tool-btn.active-tool{border-color:#374151;color:#374151;background:#f3f4f6}
+.map-items-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.map-item{background:#ffffff;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px}
+.map-item-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.map-item-info{flex:1;min-width:0}
+.map-item-name{color:#1f2937;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-item-type{color:#6b7280;font-size:10px}
+
+/* MODAL */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.mbox{background:#f3f4f6;border:1px solid #d1d5db;border-radius:18px;padding:24px;width:100%;max-width:460px;margin:auto;box-shadow:0 30px 70px rgba(0,0,0,.8)}
+.meyebrow{color:#374151;font-size:10px;letter-spacing:.15em;margin-bottom:6px;font-weight:700;text-transform:uppercase}
+.mtitle{color:#111827;font-size:20px;font-weight:700;margin-bottom:4px}
+.msub{color:#6b7280;font-size:13px;margin-bottom:20px;font-style:italic}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mod-btn{background:#ffffff;border:2px solid #d1d5db;border-radius:12px;padding:16px 12px;cursor:pointer;text-align:left;transition:all .2s}
+.mod-ico{font-size:26px;display:block;margin-bottom:6px}
+.mod-lbl{color:#111827;font-size:12px;font-weight:700;line-height:1.3}
+.save-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.save-hint{color:#9ca3af;font-size:12px;margin-bottom:4px}
+.exp-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.exp-count{color:#6b7280;font-size:11px}
+.exp-list{max-height:45vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.exp-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;border:1px solid #d1d5db;background:#ffffff;cursor:pointer}
+.exp-check{width:16px;height:16px;accent-color:#4b5563;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-title{color:#111827;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-sub{color:#6b7280;font-size:10px}
+.mbtn-row{display:flex;gap:8px;margin-top:4px}
+
+/* AUTOSAVE */
+#autosave-dot{position:fixed;bottom:16px;right:16px;background:#e5e7eb;color:#4b5563;font-size:11px;padding:5px 10px;border-radius:20px;z-index:500;display:none;pointer-events:none;transition:opacity .4s}
+
+/* PERMISSION MODAL */
+#perm-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.perm-box{background:#f3f4f6;border:1px solid #9ca3af55;border-radius:16px;padding:24px;max-width:420px;width:100%;margin:auto}
+.perm-step{background:#ffffff;border:1px solid #d1d5db;border-radius:10px;padding:12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start}
+.perm-num{background:#374151;color:#ffffff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.perm-tip{background:#f3f4f6;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:#6b7280}
+.perm-btns{display:flex;gap:8px}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+<link rel="manifest" id="manifest-link"/>
+</head>
+<body>
+
+<!-- Static HTML shell — language screen and app built by JS -->
+<div id="lang-screen-mount"></div>
+<div id="app" style="display:none">
+  <div id="install-banner">
+    <span id="install-msg">A.R.I.A</span>
+    <button id="btn-install">Install</button>
+    <button id="btn-dismiss">✕</button>
+  </div>
+  <header class="app-header">
+    <div class="hdr-top">
+      <div class="brand">
+        <h1>A.R.I.A</h1>
+        <p id="app-sub" class="app-fullname"><b>A</b>pplication for <b>R</b>esearch <b>I</b>nformation <b>A</b>cquisition</p>
+      </div>
+      <div class="hdr-btns">
+        <button class="btn-new-hdr" id="btnNew">+</button>
+        <button class="btn-exp-hdr" id="btnExport">⬇</button>
+        <button class="btn-imp-hdr" id="btnImport">⬆</button>
+        <button class="btn-lang-hdr" id="btnLang">🌐</button>
+        <button class="btn-install-hdr" id="btnInstallHdr" title="Instalar app">📲</button>
+        <input type="file" id="importFile" accept=".kada" style="display:none"/>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="n" id="st-total" style="color:#374151">0</div><div class="l" id="lbl-total">Total</div></div>
+      <div class="stat"><div class="n" id="st-saved" style="color:#4b5563">0</div><div class="l" id="lbl-saved">Saved</div></div>
+      <div class="stat"><div class="n" id="st-diario" style="color:#6b7280">0</div><div class="l">📓</div></div>
+      <div class="stat"><div class="n" id="st-observacion" style="color:#6b7280">0</div><div class="l">🔭</div></div>
+      <div class="stat"><div class="n" id="st-grupo_focal" style="color:#6b7280">0</div><div class="l">👥</div></div>
+      <div class="stat"><div class="n" id="st-etnografia" style="color:#6b7280">0</div><div class="l">🌍</div></div>
+      <div class="stat"><div class="n" id="st-entrevista" style="color:#6b7280">0</div><div class="l">🎤</div></div>
+      <div class="stat"><div class="n" id="st-cartografia" style="color:#6b7280">0</div><div class="l">🗺️</div></div>
+    </div>
+  </header>
+  <div class="filter-bar">
+    <input type="text" id="search" placeholder="🔍"/>
+    <div class="fpills" id="fpills"></div>
+  </div>
+  <main id="entries"></main>
+  <div id="overlay"></div>
+  <div id="autosave-dot">✓</div>
+</div>
+
+<script>
+/* ═══ LOAD LEAFLET ASYNC ═══ */
+var _lQ=[];
+window._leafletReady=false;
+
+
+/* ═══ MANIFEST PWA dinámico con iconos PNG (criterio de instalabilidad) ═══ */
+(function buildManifest(){
+  try{
+    var icon192='data:image/png;base64,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';
+    var icon512='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAW9ElEQVR4nO3daZBV5Z3A4dsbNDuyiYKiCCIgioDsYCM7jEaNcZxxiTExmdEJk0STSsxmKouVmDgTy9TEqcyoiUYTNeqYxCgouIAL4oZxiVFDXBBERbrZ7G0+WGVRCth9zrlb/5/nk9v73rfw7f7de+5ZKibNOjEHQDyVxV4AAMUhAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBCQBAUAIAEJQAAAQlAABBVRd7AezG8YvnXHj+uZlM1dzcfNwp57z19uZMZmuv//zhtyYfPTZ/87e2tjY1Nzc1NTU1Nu18t7G+oWHLloYt9Q1vvPnW+tc3vrZ+4yuvrn/xby83Njbmbw17l/JP4Jvfu3Tp3fdnt5x26DCbkL0QgFK0aF5dVlNVVVXNnz3juhtvy2rCklJRUVFTXV1TXZ2rzfXI5fr13efD/01zc/NL61555rm/rl7z5MOPPrF585bCr7Mc2YQRCEDJ2X+/fY88fGSGEy6cVxf5Z6+qqmrY0CHDhg45buHs1tbWp599/val9yxbvnLzO0qwRzZhEL4DKDmL5tVVVFRkOOGhww4eNnRIhhOWr4qKitEjD71gyTm33fCLC88/d9D+A4u9ohJlEwYhACVn4dxjMp9z0bxZmc9Z1mqqq49fPOeGX15+wZJzunXtWuzllBybMAgBKC1HjhmZj7el8+fMrKz0//qDKisrTz5h4W+uvmzCUWOKvZYSYhPG4f9Hacnwm7dd9e3Te9KEsfmYuQPo17fPT3/0rZOOX1DshZQKmzAOASghnTrVzK6blqfJF8/3AXyPqqqqvvKFz55y0uJiL6T4bMJQBKCEzJw2sXu3fB2PzuvkHcMXzzs7f7/7yoVNGIoAlJC8fkvWqVPNsXVT8zd/B1BRUXHhBf86cN/+xV5IMdmEoQhAqeizT++8XjSby+UWOw3jo3Tr2vXCC7K5/LUc2YTRCECpKMA5EkeOGTlov33z+hIdwMTxR4Y9KcgmjEYASkVhvh9bmJ8TPDqYT595SrGXUBw2YTQCUBKGH3JQYa6TXJj1FZ4d0tgjRgV8l2oTBiQAJWFRoU6PG5T1PV46pIqKinmzZxZ7FYVmEwbkZnDFV1lZOX/2jIK93KJ5dY+vfbpgL5fGXm6GXFVV1bVrl65danv36nnIwQcOPfjAKRPHHXLwgVm99MQJR155zQ1ZzVb6bMKYfAIovikTj+qzT++CvdzsWVM7daop2MvlSXNzc319w4aNm557/sU/3rni8it+edqnv3D6Z7549z0PZDL/6MOG19SU/Z9S29mEMQlA8eXpyvs96da16zHTJxXyFQvmry+uu/A7l3ztokuamppTTtWpU83BQwZnsqqyYBPGJABF1r1b1xlTJxb4RQv8015gy+994Ls/vCz9PHFuFm0ThiUARTZn1vTEn4VfeHFdsoGTJozt26d3srFl4Y677ntw9eMpJ9l/4IAs1lIGbMKwBKDIEr8Pqq9v+NFP/zvZ2MrKyvlzOvhZLum/wu3Ro3smKyl9NmFYAlBMg/YfeMThhyUbu+L+h55Y+8xr6zckG97hr8hf+9Sz9Q1b08zQpbZzVospZTZhZAJQTGkOg753fuSyFSuTDT9k6JBDhx2c+NVLX0tr6xNrn0kzQ6dOnbJaTCmzCSMTgKKpqKhI/OC9tze/88hja3O53LLlCX/2cgW88KdY1r++Mc3w7dt3ZLWSkmUTBicARTN2zMj9k95v4O57Hmhpacnlcn/560vrXn412STzZ8+oqqpKNrYsbKlvSDM85RGksmATBicARZPmlljLlt+/y18nfP+1T+9e+b73b3Ft27Y9zfD6hlT9KAs2YXACUBydO3eanfTJGG9seuvxXY5u+wC+J927p3r41Ftvb85oISXKJkQAiuOYaZO6dU3462nZipWtra3v/+1L615+4aW/J5tq5tSje3Tvlmxs6evZo0ea4c/95cWsVlKabEIEoDjSvOv58P3Rli7f/R3TPlJNTc2cWR32KbgHDN4v8dh3ttS/mvTsxnJhEyIARdCv7z4Txx+RbOxr6zc8/ezzH/iHqT6Ad9Ar8quqqsaMHpF4+DPP/jXDxZQgm5CcABTFgjnHJH7w3m7PuX7l1fXPPZ/weMWY0YcNHpT8nXLJOnrcmC61tYmH37PyoQwXU4JsQnICUBSJz7zO7e6j93u8//qAs04/OfHYHTt33nlXwgMa5cImJCcAhTdi+NBDkj54b93fX33+hb/t9l8lPgKby+UWzj2mgz2i76Tj5o8dMyrx8LtWrNq6bVuG6yk1NiHvEYBCS3Xl/Z5/wF7f8MZTT/8l2bT7DRww9ojkvy5LzaJ5dRf8+zmJhzc1NV9z/S3ZLacU2YS8RwAKqqqqal6KB+/t/R3WshTvvzrGB/ARw4f++Ptf+9ZXlyQ+up3L5a797S0vrXs5w1WVGpuQ9wlAQU2ZOG6f3r2SjX3+hb+t+/veLrhftmJVyy6nZrfL7GOmdu5cTvc+q6ys7NG924D+fUcMH7poXt2Sfznr+isvu/qKH0+fcnSaaV9bv+HKX92Y1SJLk03I+zwUvqDS33lxLza9+dYTa585KtHn6K5du9RNn3THXfclWlq+fPcbX/ruN75UsJerb9j65W9cvGPnzoK9YlHYhLzPJ4DC6dGj+4ypExIPb8tNd1N9AI99Rf7One9e8PUfJL6ctVzYhOxKAApnbt20mpqED9778zN/actjN96/QWMCR48/sl/fPsnGlrt3ttRf8PUfpHx+QFmwCdmVABROmnc3bTzD+u3N76x57KlkL1GZ4tbwZe3pZ5//5GfPX/3ok8VeSCHYhOxKAArkgMH7HT7q0GRjW1tb2/7QpaUrUpyLHew0jB07d155zQ2fW/L11zduKvZaCsEm5AMEoEDSPP708bXPvLHprTb+xyvufbCpqTnZCw096IARw4cmG1teWlpabrv9rpNPP++K/72usamp2MspEJuQDxCAQqioqFiQhyvvd2tLfcPDa55I/FqLO/q3cBvfePOqa2/6xJn/9v1Lfrbpzbb+RusAbEI+TAAK4agjRw/ct3+ysS0tLXffu6pdQ9KchjHv2BnV1R32EX23/P7OUz+15Of/c+2rr71e7LUUmk3IhwlAISxOcVjzkcfWbt68pV1D7rn/4cbGxmQv17t3zykTxyUbW/pO+Id5t9905YXnnzso6YNwy5dNyIcJQN7Vdu48a+aUxMPb9dH7PVu3bXvg4ccSv2LHviK/c+dOxy+e89tfXn7eOWfUVEe5ENImZLcEIO/qZk7u2rVLsrGNTU0r7nswwcA092WcPvXoHj26Jx5eFqqqqs74pxOv/PkliY+KlBebkN0SgLxL817modWP1TdsTTDw/lWPJL6lQU119dxZ05ONLS/Dhg75xeUXJ74xchmxCdktAciv/v36TBiX8MF7uVxuadInbGzfsWPlg2sSv+7i+XWJx5aXfn37/Own3xm0/8BiLySPbEL2RADya8HcYyqTPuZi58537135cOKXTnDc9n2jRx564OD9Ew8vL7179bz04q934AMONiF7IgD5tXBuXeKxKx9cs337jsTDVz20Ztu27YmHh/oWbsgBg7791SXFXkW+2ITsSZSzIIpi5IhDhh50QOLhab5Dy+Vy777beN+q1fPnzEw2fMG8uiuuvK416b3dM/HN7136gbeQlZWV3bt17dG925ADBx06fOi0yePHjBqRyWtNnzLhpOPm/+62OzKZrXTYhOyFAOTRohRX3udyuYsv+nJWK0lg4IB+444cvebxhHf1ypOWlpYt9Q1b6hteXb9h1UOPXnXNjYMH7XfOWafOT/GIq/ctOfesh9Y80cGuEbMJ2QuHgPKlurpq7rHlfRpDWdyc/ZVX13/7+//x+S9f1LA17WPcazt3Pv/zn8lkVSXCJmTvBCBfpk4a37tXz2KvIpVjZ07pUltb7FW0yeo1T35uyYVvb34n5TxTJ42bMTXVQyVLik3I3glAvnSAdy5dutTWzZhU7FW01Qsv/f0r3/xh+lt7fuG8szvMjWhsQvZOAPKiZ4/u0yaPL/YqMpDyCHKBrf3zsz+57BcpJxm0377HL5qbyXqKyybkIwlAXsybPaNj3Gdm/LgxA/r3LfYq2uGW39+5ek3aZ3udfcbJnTt3ymQ9RWQT8pEEIC86zPnLlRUVC+aU2SP6Lr70vxLfgeA9/fr2OfljC7NaT7HYhHwkAcjekAMGjTpseLFXkZmy+z3y2voN19/4+5STnH7qCbWdO2eynqKwCWkLAcjeoo51D5ODhgweNWJYsVfRPtdcf/OW+oY0M+zTu9eJx83Laj2FZxPSFgKQsQ75cXVhuf02adi67eprb0o5yWn/eEKnTjWZrKfAbELaSAAyNv6oMfsO6FfsVWSsHB/Rd9Otf2rvQ6w+oF/ffT62uCxPB7IJaSMByNjCjniwslfPHtMmTyj2Ktpnx86d195wa8pJzjj1xHI8kcYmpI0EIEtdamtnzZxc7FXkRTl+C3fTrX9K+U3AgP59j1s4O6v1FIZNSNsJQJZmzZzcUS9bnzp5fK+ePYq9ivbZtm379TfelnKSM//5pPI68mAT0nYCkKUO+dH7PTXV1eV4W7Hf/u4PKW8SN3Df/uV1JapNSNuV3/HNkjWgf9/xR41JPHz1mic//+WLslvObnSprb395isTn96+aP6sG2+5Pdsl5VvD1m033PyHT53+iTSTfPK0j//hjuXNzc1ZrSp/bELaxSeAzCycW5f4wXu5XO7Ou+/LcDG7tX3HjpUPPJJ4+KgRww4aMjjD9RTGdTfcluaZVrlcbtB++y5I+kiTArMJaRcByEyab6gam5pW3PdgdmvZozTPaM2V57dwW+ob0r9n/ORpH0/zi7VgbELaRQCyMeqw4UMOHJR4+IMPP1bfsDXD9ezJyoce3bot+THxBXOSP168iK694daUdwc6cPD+pX/02SakvQQgG4vT3Xg95XuitmtsbLx35erEwwf07zt+XPJDzMWyefOWm2+7M+UkZ51+con/3rEJaS8ByEBNdfWcWdMSD9+xc+d9q5L/PLTX0nTHecvrlJj3XfubW959tzHNDAcPOWDWzClZrSdzNiEJCEAGpk2ZkOb05PtXPbJ9R6pvKdvl4TVPvLOlPvHwuhmTunQpv9PMN7359v/9cVnKST51xicqSvVDgE1IAgKQgZTfShXg1ItdNTU1p/mur0tt7bEl/EZ4L351/c0pHxg5bOiQY6ZNzGo92bIJSUAA0urdq+fUSckfvNewddsDDz+W4XraYtnylWmGl+mlRhs2bvrjHctTTnL2Gadksphs2YQkIwBpzT12eppbBay478HGxlTHphNY89jaN9/anHj4+LGHDyzPm01e/evfpbye69DhB0+fUnK3JLMJSUYA0kr5fVTBTr3YVUtr6933rko8vKKiYsHcsrzd/GvrN/xp6T0pJzn7jFTXFeeDTUgyApDKQUMGjxxxSOLhb29+Z/WjaZ9gnkzKn/ny/QB+1a9vamlpSTPDqMOGTz56bEbLyYBNSGICkMridO+87r7ngZS/jBJb++fnNmzclHj4kAMGjR55aIbrKZiXX1m/NN3R51wu9+kzS+ibAJuQxAQgucrUH0ILfOrFrlpbW+9akfwDeC6XW1y2j+i76pobW1tb08wwZvRhR487Iqv1pGETZrSWoAQguQnjjujfr0/i4Rs2bnryqWczXE97LV2e6id/zqzp5fi0rFwu99K6l5ffm/amN2eXxocAm7BMN2GJqJg068RirwGAIvAJACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAISgAAghIAgKAEACAoAQAI6v8BVPxOBDfnLRsAAAAASUVORK5CYII=';
+    var base=location.href.split('?')[0].split('#')[0];
+    var dir=base.substring(0,base.lastIndexOf('/')+1);
+    var mf={name:'A.R.I.A',short_name:'A.R.I.A',description:'Application for Research Information Acquisition',
+      display:'standalone',orientation:'portrait',background_color:'#ffffff',theme_color:'#ffffff',
+      start_url:base,scope:dir,id:dir,
+      icons:[{src:icon192,sizes:'192x192',type:'image/png',purpose:'any'},
+             {src:icon512,sizes:'512x512',type:'image/png',purpose:'any'},
+             {src:icon512,sizes:'512x512',type:'image/png',purpose:'maskable'}]};
+    var blob=new Blob([JSON.stringify(mf)],{type:'application/manifest+json'});
+    var url=URL.createObjectURL(blob);
+    var link=document.getElementById('manifest-link');
+    if(link)link.setAttribute('href',url);
+  }catch(e){}
+})();
+
+/* ═══ SERVICE WORKER: el propio HTML actúa como su Service Worker (single-file PWA) ═══ */
+/* Cuando la app se sirve por http(s), registramos ESTE MISMO archivo como Service Worker.
+   El archivo detecta el contexto SW (self.ServiceWorkerGlobalScope) al inicio y se comporta
+   como worker. Esto sí cumple el criterio de instalabilidad (SW del mismo origen + scope raíz). */
+(function registerMapSW(){
+  if(!('serviceWorker' in navigator))return;
+  if(location.protocol!=='http:'&&location.protocol!=='https:')return; // file:// no admite SW
+  // Intenta registrar sw.js (archivo opcional que habilita modo offline completo de mapas).
+  // Si no existe, la app funciona igual usando la caché HTTP normal del navegador.
+  navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){/* sw.js no presente: OK */});
+})();
+function whenLeaflet(fn){if(window._leafletReady)fn();else _lQ.push(fn);}
+var ls=document.createElement('script');
+ls.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+ls.onload=function(){window._leafletReady=true;_lQ.forEach(function(f){f();});_lQ=[];};
+document.head.appendChild(ls);
+
+/* ═══════════════════════════════════════════════════
+   TRANSLATIONS — defined FIRST, before anything else
+═══════════════════════════════════════════════════ */
+var LANGS = {
+es:{
+  code:'es',flag:'🇪🇸',name:'Español',
+  appSub:'',
+  btnNew:'+ Nueva',btnExport:'⬇ .kada',btnImport:'⬆ Abrir',btnLang:'🌐',
+  statTotal:'Total',statSaved:'Guardadas',
+  searchPH:'🔍 Buscar por nombre o contenido...',
+  filterAll:'Todas',
+  emptyTitle:'Tu registro está vacío',
+  emptySub:'Crea tu primera entrada o abre un archivo .kada',
+  emptyNew:'+ Crear entrada',emptyOpen:'⬆ Abrir .kada',
+  noResults:'Sin resultados para esta búsqueda.',
+  installMsg:'📲 Instala A.R.I.A para usarla sin internet',installBtn:'Instalar',
+  autosaved:'✓ Guardado',sessionRestored:'✓ Sesión restaurada',
+  confirmDel:'¿Eliminar esta entrada?',
+  confirmYes:'Sí, eliminar',confirmOk:'Aceptar',
+  saveTitle:'Guardar entrada',saveLabel:'Nombre del archivo',saveBtn:'💾 Guardar',
+  cancelBtn:'Cancelar',
+  exportTitle:'Exportar a .kada',exportSub:'Selecciona las entradas a incluir.',
+  exportProjLabel:'Nombre del proyecto',
+  exportCount:function(n,t){return n+' de '+t+' seleccionadas';},
+  exportDeselectAll:'Desmarcar todas',exportSelectAll:'Seleccionar todas',
+  exportBtn:function(n){return '⬇ Exportar ('+n+') .kada';},
+  importOk:function(n){return '✅ Se importaron '+n+' entrada(s) con todos sus archivos.';},
+  importErr:'El archivo no es un .kada válido.',
+  mapDlTitle:'🗺️ Mapas sin conexión',
+  mapDlMsg:'A.R.I.A necesita una primera conexión a Internet para descargar los mapas. Una vez descargados, quedarán disponibles sin conexión. La descarga se realizará automáticamente cada vez que el dispositivo esté conectado.',
+  mapDlOk:'Entendido',
+  mapDownloading:'⬇ Descargando mapas...',mapReady:'✓ Mapas disponibles sin conexión',
+  installApp:'⬇ Instalar app',
+  iosInstallTitle:'📲 Instalar A.R.I.A',
+  iosInstallMsg:'Para instalar en tu iPhone/iPad:\n\n1. Toca el botón Compartir (el cuadro con la flecha ↑) en la barra de Safari.\n2. Desliza y elige "Añadir a pantalla de inicio".\n3. Toca "Añadir" en la esquina superior.\n\nA.R.I.A aparecerá como una app en tu pantalla.',
+  installedMsg:'✓ La app ya está instalada',
+  installFileMsg:'Para instalar A.R.I.A en tu teléfono o PC, la app debe abrirse desde una dirección web (https://), no como archivo local.\n\nSube el archivo a un hosting gratuito (Netlify, GitHub Pages, Vercel) y ábrelo desde ahí. Entonces el botón instalará la app directamente en tu pantalla.\n\nEn iPhone: usa Compartir → Añadir a pantalla de inicio.',
+  installMenuMsg:'Para instalar: abre el menú del navegador (⋮ arriba a la derecha) y elige "Instalar aplicación" o "Añadir a pantalla de inicio".',
+  newTitle:'¿Qué tipo de registro?',newSub:'Selecciona el método para esta sesión.',
+  recStart:'🎙 Iniciar grabación',recStop:'⏹ Detener',recSaving:'⏳ Guardando...',
+  recDot:'⏺ Grabando...',recNative:'🎤 Grabar (nativo)',recLoad:'📂 Cargar audio',
+  recEmpty:'Sin grabaciones — usa cualquiera de los botones',
+  writeMode:'✏️ Escribir',audioMode:'🎙️ Grabar / cargar audio',
+  textAns:'✏️ Texto',audioAns:'🎙️ Audio',
+  evLabel:'📎 Evidencias (fotos, audios, videos)',
+  evPhoto:'📷 Foto',evAudio:'🎵 Audio',evVideo:'📁 Video',evRecVid:'🎬 Grabar video',
+  evStopVid:'⏹ Detener',evEmpty:'Sin evidencias aún',
+  qaLabel:'❓ Preguntas y respuestas',qaPH:'Escribe una pregunta y presiona +',
+  qaAdd:'+ Agregar',qaEmpty:'Sin preguntas aún.',qaAnsLabel:'Respuesta:',
+  permTitle:'PERMISO REQUERIDO',permMic:'🎙️ Micrófono bloqueado',permCam:'📷 Cámara bloqueada',
+  permSub:'Chrome bloqueó el acceso. Sigue estos pasos:',
+  permSteps:['Toca el 🔒 candado o ⓘ en la barra de Chrome','Toca "Permisos" o "Configuración del sitio"','Busca el permiso y cámbialo a Permitir ✓','Vuelve aquí y toca "Intentar de nuevo"'],
+  permTip:'💡 Alternativa: usa "📂 Cargar audio" para subir un archivo de tu app de voz.',
+  permRetry:'🔄 Intentar de nuevo',permClose:'Cerrar',
+  mapNotesPH:'Notas generales del mapa...',mapNotesLabel:'📝 Notas del mapa',
+  mapHint:'Toca el mapa para agregar puntos, líneas o zonas.',
+  mapAskPt:'Nombre para este punto:',mapAskLine:'Nombre para esta línea:',mapAskPoly:'Nombre para esta zona:',
+  mapPt:'📍 Punto',mapLine:'〰️ Línea',mapPoly:'⬡ Polígono',mapMove:'✋ Mover',mapNotes:'📝 Notas',mapGPS:'📡',
+  mapDel:'🗑 Eliminar',mapLegend:'Leyenda',
+  mods:[{l:'Diario de Campo',s:'Diario'},{l:'Observación participante',s:'Obs.'},{l:'Grupo Focal',s:'G.Focal'},{l:'Etnografía',s:'Etno.'},{l:'Entrevista',s:'Entrev.'},{l:'Cartografía Social',s:'Cartog.'}],
+  filters:['Todas','📓 Diario','🔭 Obs.','👥 G.Focal','🌍 Etno.','🎤 Entrev.','🗺️ Cartog.'],
+  obsTypes:['Participante','No participante'],
+  itvTypes:['Estructurada','Semiestructurada','No estructurada','Biográfica','En profundidad'],
+  mapCats:[{id:'punto_interes',l:'Punto de interés',i:'📍'},{id:'recurso',l:'Recurso natural',i:'🌿'},{id:'conflicto',l:'Zona de conflicto',i:'⚡'},{id:'riesgo',l:'Zona de riesgo',i:'⚠️'},{id:'actor',l:'Actor territorial',i:'👥'},{id:'infraestructura',l:'Infraestructura',i:'🏗️'},{id:'memoria',l:'Memoria histórica',i:'📜'},{id:'potencial',l:'Potencialidad',i:'✨'},{id:'limite',l:'Límite / frontera',i:'🔴'},{id:'otro',l:'Otro',i:'📌'}],
+  fields:{fecha:'📅 Fecha',hora:'🕐 Hora inicio',hora_inicio:'🕐 Hora inicio',hora_fin:'🕓 Hora fin',lugar:'📍 Lugar',objetivo:'🎯 Objetivo',actividad:'🔬 Actividad',descripcion:'📝 Descripción detallada',datos:'📊 Registro de datos',entorno:'🌤 Condiciones del entorno',instrumentos:'🛠 Instrumentos',actores:'👥 Actores',interpretacion:'🧠 Interpretación',dificultades:'⚠️ Dificultades',soluciones:'✅ Soluciones',conclusiones:'📌 Conclusiones',recomendaciones:'💡 Recomendaciones',evidencias:'📎 Evidencias',tipo:'🔭 Tipo de observación',contexto:'🌐 Contexto',eventos_clave:'⚡ Eventos clave',interacciones:'🔗 Interacciones',lenguaje:'💬 Lenguaje / expresiones',reflexion:'🪞 Reflexión del observador',tema:'🗂 Tema',moderador:'🧑‍💼 Moderador',num_participantes:'👥 Nº participantes',caracteristicas:'🪪 Características',preguntas_guia:'❓ Guía de preguntas',desarrollo:'📋 Desarrollo',opiniones:'💭 Opiniones',acuerdos:'✅ Acuerdos',desacuerdos:'❌ Desacuerdos',citas:'💬 Citas',dinamica:'🔄 Dinámica',no_verbal:'🤝 Lenguaje no verbal',hallazgos:'🔍 Hallazgos',duracion:'⏱ Duración',contexto_cultural:'🌍 Contexto cultural',practicas:'🎭 Prácticas / rituales',estructura:'🏛 Estructura social',entrevistador:'🧑 Entrevistador',perfil:'🧑‍💻 Perfil entrevistado',preguntas:'❓ Preguntas y respuestas',observaciones:'📝 Observaciones',facilitador:'🧑‍💼 Facilitador',mapa:'🗺️ Mapa interactivo',mapa_notas:'📝 Notas del mapa',elementos_naturales:'🌿 Elementos naturales',elementos_construidos:'🏗️ Elementos construidos',actores_territoriales:'👥 Actores territoriales',conflictos:'⚡ Conflictos',recursos:'💎 Recursos',riesgos:'⚠️ Zonas de riesgo',potencialidades:'✨ Potencialidades',relaciones_poder:'🔗 Relaciones de poder',memoria_historica:'📜 Memoria histórica'},
+  ph:{lugar:'Comunidad, espacio...',instrumentos:'Grabadora, cámara...',moderador:'Nombre del moderador...',caracteristicas:'Edad, perfil, rol...',tema:'Tema central...',entrevistador:'Nombre...',duracion:'Ej: 3 horas...',facilitador:'Nombre del facilitador...'}
+},
+en:{
+  code:'en',flag:'🇬🇧',name:'English',
+  appSub:'',
+  btnNew:'+ New',btnExport:'⬇ .kada',btnImport:'⬆ Open',btnLang:'🌐',
+  statTotal:'Total',statSaved:'Saved',
+  searchPH:'🔍 Search by name or content...',
+  filterAll:'All',
+  emptyTitle:'Your record is empty',
+  emptySub:'Create your first entry or open an .kada file',
+  emptyNew:'+ Create entry',emptyOpen:'⬆ Open .kada',
+  noResults:'No results for this search.',
+  installMsg:'📲 Install A.R.I.A to use it offline',installBtn:'Install',
+  autosaved:'✓ Saved',sessionRestored:'✓ Session restored',
+  confirmDel:'Delete this entry?',
+  confirmYes:'Yes, delete',confirmOk:'OK',
+  saveTitle:'Save entry',saveLabel:'File name',saveBtn:'💾 Save',cancelBtn:'Cancel',
+  exportTitle:'Export to .kada',exportSub:'Select the entries to include.',
+  exportProjLabel:'Project name',
+  exportCount:function(n,t){return n+' of '+t+' selected';},
+  exportDeselectAll:'Deselect all',exportSelectAll:'Select all',
+  exportBtn:function(n){return '⬇ Export ('+n+') .kada';},
+  importOk:function(n){return '✅ '+n+' entry/entries imported with all media.';},
+  importErr:'This is not a valid .kada file.',
+  mapDlTitle:'🗺️ Offline maps',
+  mapDlMsg:'A.R.I.A needs an initial Internet connection to download the maps. Once downloaded, they will be available offline. The download will run automatically whenever the device is connected.',
+  mapDlOk:'Got it',
+  mapDownloading:'⬇ Downloading maps...',mapReady:'✓ Maps available offline',
+  installApp:'⬇ Install app',
+  iosInstallTitle:'📲 Install A.R.I.A',
+  iosInstallMsg:'To install on your iPhone/iPad:\n\n1. Tap the Share button (the box with an arrow ↑) in the Safari bar.\n2. Scroll and choose "Add to Home Screen".\n3. Tap "Add" in the top corner.\n\nA.R.I.A will appear as an app on your screen.',
+  installedMsg:'✓ The app is already installed',
+  installFileMsg:'To install A.R.I.A on your phone or PC, the app must be opened from a web address (https://), not as a local file.\n\nUpload the file to free hosting (Netlify, GitHub Pages, Vercel) and open it from there. Then the button will install the app directly to your screen.\n\nOn iPhone: use Share → Add to Home Screen.',
+  installMenuMsg:'To install: open your browser menu (⋮ top right) and choose "Install app" or "Add to Home Screen".',
+  newTitle:'What type of record?',newSub:'Select the method for this session.',
+  recStart:'🎙 Start recording',recStop:'⏹ Stop',recSaving:'⏳ Saving...',
+  recDot:'⏺ Recording...',recNative:'🎤 Record (native)',recLoad:'📂 Load audio',
+  recEmpty:'No recordings yet — use any button above',
+  writeMode:'✏️ Write',audioMode:'🎙️ Record / load audio',
+  textAns:'✏️ Text',audioAns:'🎙️ Audio',
+  evLabel:'📎 Evidence (photos, audio, video)',
+  evPhoto:'📷 Photo',evAudio:'🎵 Audio',evVideo:'📁 Video',evRecVid:'🎬 Record video',
+  evStopVid:'⏹ Stop',evEmpty:'No evidence yet',
+  qaLabel:'❓ Questions & Answers',qaPH:'Type a question and press +',
+  qaAdd:'+ Add',qaEmpty:'No questions yet.',qaAnsLabel:'Answer:',
+  permTitle:'PERMISSION REQUIRED',permMic:'🎙️ Microphone blocked',permCam:'📷 Camera blocked',
+  permSub:'Chrome blocked access. Follow these steps:',
+  permSteps:['Tap the 🔒 lock or ⓘ in Chrome address bar','Tap "Permissions" or "Site settings"','Find the permission and set it to Allow ✓','Come back and tap "Try again"'],
+  permTip:'💡 Alternative: use "📂 Load audio" to upload a file from your voice app.',
+  permRetry:'🔄 Try again',permClose:'Close',
+  mapNotesPH:'General map notes...',mapNotesLabel:'📝 Map notes',
+  mapHint:'Tap the map to add points, lines or areas.',
+  mapAskPt:'Name for this point:',mapAskLine:'Name for this line:',mapAskPoly:'Name for this area:',
+  mapPt:'📍 Point',mapLine:'〰️ Line',mapPoly:'⬡ Polygon',mapMove:'✋ Move',mapNotes:'📝 Notes',mapGPS:'📡',
+  mapDel:'🗑 Delete',mapLegend:'Legend',
+  mods:[{l:'Field Diary',s:'Diary'},{l:'Participant Observation',s:'Obs.'},{l:'Focus Group',s:'F.Group'},{l:'Ethnography',s:'Ethno.'},{l:'Interview',s:'Interv.'},{l:'Social Mapping',s:'Mapping'}],
+  filters:['All','📓 Diary','🔭 Obs.','👥 F.Group','🌍 Ethno.','🎤 Interv.','🗺️ Mapping'],
+  obsTypes:['Participant','Non-participant'],
+  itvTypes:['Structured','Semi-structured','Unstructured','Biographical','In-depth'],
+  mapCats:[{id:'punto_interes',l:'Point of interest',i:'📍'},{id:'recurso',l:'Natural resource',i:'🌿'},{id:'conflicto',l:'Conflict zone',i:'⚡'},{id:'riesgo',l:'Risk area',i:'⚠️'},{id:'actor',l:'Territorial actor',i:'👥'},{id:'infraestructura',l:'Infrastructure',i:'🏗️'},{id:'memoria',l:'Historical memory',i:'📜'},{id:'potencial',l:'Potentiality',i:'✨'},{id:'limite',l:'Border / boundary',i:'🔴'},{id:'otro',l:'Other',i:'📌'}],
+  fields:{fecha:'📅 Date',hora:'🕐 Start time',hora_inicio:'🕐 Start time',hora_fin:'🕓 End time',lugar:'📍 Location',objetivo:'🎯 Objective',actividad:'🔬 Activity',descripcion:'📝 Detailed description',datos:'📊 Data record',entorno:'🌤 Environment',instrumentos:'🛠 Instruments',actores:'👥 Actors',interpretacion:'🧠 Interpretation',dificultades:'⚠️ Difficulties',soluciones:'✅ Solutions',conclusiones:'📌 Conclusions',recomendaciones:'💡 Recommendations',evidencias:'📎 Evidence',tipo:'🔭 Observation type',contexto:'🌐 Context',eventos_clave:'⚡ Key events',interacciones:'🔗 Interactions',lenguaje:'💬 Language / expressions',reflexion:'🪞 Observer reflection',tema:'🗂 Topic',moderador:'🧑‍💼 Moderator',num_participantes:'👥 No. participants',caracteristicas:'🪪 Characteristics',preguntas_guia:'❓ Question guide',desarrollo:'📋 Development',opiniones:'💭 Opinions',acuerdos:'✅ Agreements',desacuerdos:'❌ Disagreements',citas:'💬 Quotes',dinamica:'🔄 Dynamics',no_verbal:'🤝 Non-verbal language',hallazgos:'🔍 Findings',duracion:'⏱ Duration',contexto_cultural:'🌍 Cultural context',practicas:'🎭 Practices / rituals',estructura:'🏛 Social structure',entrevistador:'🧑 Interviewer',perfil:'🧑‍💻 Interviewee profile',preguntas:'❓ Questions & Answers',observaciones:'📝 Observations',facilitador:'🧑‍💼 Facilitator',mapa:'🗺️ Interactive map',mapa_notas:'📝 Map notes',elementos_naturales:'🌿 Natural elements',elementos_construidos:'🏗️ Built elements',actores_territoriales:'👥 Territorial actors',conflictos:'⚡ Conflicts',recursos:'💎 Resources',riesgos:'⚠️ Risk areas',potencialidades:'✨ Potentialities',relaciones_poder:'🔗 Power relations',memoria_historica:'📜 Historical memory'},
+  ph:{lugar:'Community, space...',instrumentos:'Recorder, camera...',moderador:'Moderator name...',caracteristicas:'Age, profile, role...',tema:'Main topic...',entrevistador:'Name...',duracion:'E.g.: 3 hours...',facilitador:'Facilitator name...'}
+},
+fr:{
+  code:'fr',flag:'🇫🇷',name:'Français',
+  appSub:'',
+  btnNew:'+ Nouveau',btnExport:'⬇ .kada',btnImport:'⬆ Ouvrir',btnLang:'🌐',
+  statTotal:'Total',statSaved:'Sauvegardés',
+  searchPH:'🔍 Rechercher par nom ou contenu...',
+  filterAll:'Tous',
+  emptyTitle:'Votre registre est vide',
+  emptySub:"Créez votre première entrée ou ouvrez un fichier .kada",
+  emptyNew:'+ Créer une entrée',emptyOpen:'⬆ Ouvrir .kada',
+  noResults:'Aucun résultat pour cette recherche.',
+  installMsg:"📲 Installez A.R.I.A pour l'utiliser hors ligne",installBtn:'Installer',
+  autosaved:'✓ Sauvegardé',sessionRestored:'✓ Session restaurée',
+  confirmDel:'Supprimer cette entrée ?',
+  confirmYes:'Oui, supprimer',confirmOk:'Valider',
+  saveTitle:"Sauvegarder l'entrée",saveLabel:'Nom du fichier',saveBtn:'💾 Sauvegarder',cancelBtn:'Annuler',
+  exportTitle:'Exporter en .kada',exportSub:'Sélectionnez les entrées à inclure.',
+  exportProjLabel:'Nom du projet',
+  exportCount:function(n,t){return n+' sur '+t+' sélectionnées';},
+  exportDeselectAll:'Tout désélectionner',exportSelectAll:'Tout sélectionner',
+  exportBtn:function(n){return '⬇ Exporter ('+n+') .kada';},
+  importOk:function(n){return '✅ '+n+' entrée(s) importée(s) avec tous les fichiers.';},
+  importErr:"Ce fichier n'est pas un .kada valide.",
+  mapDlTitle:'🗺️ Cartes hors ligne',
+  mapDlMsg:"A.R.I.A a besoin d'une première connexion Internet pour télécharger les cartes. Une fois téléchargées, elles seront disponibles hors ligne. Le téléchargement se fera automatiquement dès que l'appareil sera connecté.",
+  mapDlOk:'Compris',
+  mapDownloading:'⬇ Téléchargement des cartes...',mapReady:'✓ Cartes disponibles hors ligne',
+  installApp:'⬇ Installer',
+  iosInstallTitle:'📲 Installer A.R.I.A',
+  iosInstallMsg:'Pour installer sur votre iPhone/iPad :\n\n1. Touchez le bouton Partager (le carré avec une flèche ↑) dans la barre Safari.\n2. Faites défiler et choisissez "Sur l\'écran d\'accueil".\n3. Touchez "Ajouter" en haut.\n\nA.R.I.A apparaîtra comme une application sur votre écran.',
+  installedMsg:'✓ L\'application est déjà installée',
+  installFileMsg:"Pour installer A.R.I.A sur votre téléphone ou PC, l\'application doit être ouverte depuis une adresse web (https://), pas comme fichier local.\n\nMettez le fichier sur un hébergement gratuit (Netlify, GitHub Pages, Vercel) et ouvrez-le depuis là. Le bouton installera alors l\'application directement sur votre écran.\n\nSur iPhone : utilisez Partager → Sur l\'écran d\'accueil.",
+  installMenuMsg:'Pour installer : ouvrez le menu du navigateur (⋮ en haut à droite) et choisissez "Installer l\'application" ou "Sur l\'écran d\'accueil".',
+  newTitle:"Quel type d'enregistrement ?",newSub:'Sélectionnez la méthode pour cette session.',
+  recStart:"🎙 Démarrer l'enregistrement",recStop:'⏹ Arrêter',recSaving:'⏳ Sauvegarde...',
+  recDot:'⏺ Enregistrement...',recNative:'🎤 Enregistrer (natif)',recLoad:'📂 Charger audio',
+  recEmpty:'Aucun enregistrement — utilisez un bouton ci-dessus',
+  writeMode:'✏️ Écrire',audioMode:'🎙️ Enregistrer / charger audio',
+  textAns:'✏️ Texte',audioAns:'🎙️ Audio',
+  evLabel:'📎 Preuves (photos, audio, vidéo)',
+  evPhoto:'📷 Photo',evAudio:'🎵 Audio',evVideo:'📁 Vidéo',evRecVid:'🎬 Enregistrer vidéo',
+  evStopVid:'⏹ Arrêter',evEmpty:'Aucune preuve encore',
+  qaLabel:'❓ Questions & Réponses',qaPH:'Tapez une question et appuyez sur +',
+  qaAdd:'+ Ajouter',qaEmpty:'Pas encore de questions.',qaAnsLabel:'Réponse :',
+  permTitle:'AUTORISATION REQUISE',permMic:'🎙️ Microphone bloqué',permCam:'📷 Caméra bloquée',
+  permSub:"Chrome a bloqué l'accès. Suivez ces étapes :",
+  permSteps:["Appuyez sur le 🔒 cadenas dans la barre Chrome","Appuyez sur 'Autorisations' ou 'Paramètres du site'","Trouvez l'autorisation et mettez-la sur Autoriser ✓","Revenez ici et appuyez sur 'Réessayer'"],
+  permTip:'💡 Alternative : utilisez "📂 Charger audio" pour télécharger un fichier de votre app vocale.',
+  permRetry:'🔄 Réessayer',permClose:'Fermer',
+  mapNotesPH:'Notes générales de la carte...',mapNotesLabel:'📝 Notes de la carte',
+  mapHint:'Appuyez sur la carte pour ajouter des points, lignes ou zones.',
+  mapAskPt:'Nom pour ce point :',mapAskLine:'Nom pour cette ligne :',mapAskPoly:'Nom pour cette zone :',
+  mapPt:'📍 Point',mapLine:'〰️ Ligne',mapPoly:'⬡ Polygone',mapMove:'✋ Déplacer',mapNotes:'📝 Notes',mapGPS:'📡',
+  mapDel:'🗑 Supprimer',mapLegend:'Légende',
+  mods:[{l:'Journal de terrain',s:'Journal'},{l:'Observation participante',s:'Obs.'},{l:'Groupe focal',s:'G.Focal'},{l:'Ethnographie',s:'Ethno.'},{l:'Entretien',s:'Entret.'},{l:'Cartographie sociale',s:'Cartog.'}],
+  filters:['Tous','📓 Journal','🔭 Obs.','👥 G.Focal','🌍 Ethno.','🎤 Entret.','🗺️ Cartog.'],
+  obsTypes:['Participante','Non-participante'],
+  itvTypes:['Structuré','Semi-structuré','Non structuré','Biographique','Approfondi'],
+  mapCats:[{id:'punto_interes',l:"Point d'intérêt",i:'📍'},{id:'recurso',l:'Ressource naturelle',i:'🌿'},{id:'conflicto',l:'Zone de conflit',i:'⚡'},{id:'riesgo',l:'Zone à risque',i:'⚠️'},{id:'actor',l:'Acteur territorial',i:'👥'},{id:'infraestructura',l:'Infrastructure',i:'🏗️'},{id:'memoria',l:'Mémoire historique',i:'📜'},{id:'potencial',l:'Potentialité',i:'✨'},{id:'limite',l:'Frontière / limite',i:'🔴'},{id:'otro',l:'Autre',i:'📌'}],
+  fields:{fecha:'📅 Date',hora:'🕐 Heure début',hora_inicio:'🕐 Heure début',hora_fin:'🕓 Heure fin',lugar:'📍 Lieu',objetivo:'🎯 Objectif',actividad:'🔬 Activité',descripcion:'📝 Description détaillée',datos:'📊 Données enregistrées',entorno:"🌤 Conditions environnement",instrumentos:'🛠 Instruments',actores:'👥 Acteurs',interpretacion:'🧠 Interprétation',dificultades:'⚠️ Difficultés',soluciones:'✅ Solutions',conclusiones:'📌 Conclusions',recomendaciones:'💡 Recommandations',evidencias:'📎 Preuves',tipo:"🔭 Type d'observation",contexto:'🌐 Contexte',eventos_clave:'⚡ Événements clés',interacciones:'🔗 Interactions',lenguaje:'💬 Langage / expressions',reflexion:"🪞 Réflexion observateur",tema:'🗂 Thème',moderador:'🧑‍💼 Modérateur',num_participantes:'👥 Nb. participants',caracteristicas:'🪪 Caractéristiques',preguntas_guia:'❓ Guide de questions',desarrollo:'📋 Déroulement',opiniones:'💭 Opinions',acuerdos:'✅ Accords',desacuerdos:'❌ Désaccords',citas:'💬 Citations',dinamica:'🔄 Dynamique',no_verbal:'🤝 Langage non verbal',hallazgos:'🔍 Résultats',duracion:'⏱ Durée',contexto_cultural:'🌍 Contexte culturel',practicas:'🎭 Pratiques / rituels',estructura:'🏛 Structure sociale',entrevistador:'🧑 Enquêteur',perfil:"🧑‍💻 Profil interviewé",preguntas:'❓ Questions & Réponses',observaciones:'📝 Observations',facilitador:'🧑‍💼 Facilitateur',mapa:'🗺️ Carte interactive',mapa_notas:'📝 Notes carte',elementos_naturales:'🌿 Éléments naturels',elementos_construidos:'🏗️ Éléments construits',actores_territoriales:'👥 Acteurs territoriaux',conflictos:'⚡ Conflits',recursos:'💎 Ressources',riesgos:'⚠️ Zones à risque',potencialidades:'✨ Potentialités',relaciones_poder:'🔗 Relations de pouvoir',memoria_historica:'📜 Mémoire historique'},
+  ph:{lugar:'Communauté, espace...',instrumentos:'Enregistreur, caméra...',moderador:'Nom du modérateur...',caracteristicas:'Âge, profil, rôle...',tema:'Thème principal...',entrevistador:'Nom...',duracion:'Ex. : 3 heures...',facilitador:'Nom du facilitateur...'}
+},
+pt:{
+  code:'pt',flag:'🇧🇷',name:'Português',
+  appSub:'',
+  btnNew:'+ Nova',btnExport:'⬇ .kada',btnImport:'⬆ Abrir',btnLang:'🌐',
+  statTotal:'Total',statSaved:'Salvas',
+  searchPH:'🔍 Buscar por nome ou conteúdo...',
+  filterAll:'Todas',
+  emptyTitle:'Seu registro está vazio',
+  emptySub:'Crie sua primeira entrada ou abra um arquivo .kada',
+  emptyNew:'+ Criar entrada',emptyOpen:'⬆ Abrir .kada',
+  noResults:'Nenhum resultado para esta busca.',
+  installMsg:'📲 Instale A.R.I.A para usar sem internet',installBtn:'Instalar',
+  autosaved:'✓ Salvo',sessionRestored:'✓ Sessão restaurada',
+  confirmDel:'Excluir esta entrada?',
+  confirmYes:'Sim, excluir',confirmOk:'Confirmar',
+  saveTitle:'Salvar entrada',saveLabel:'Nome do arquivo',saveBtn:'💾 Salvar',cancelBtn:'Cancelar',
+  exportTitle:'Exportar para .kada',exportSub:'Selecione as entradas a incluir.',
+  exportProjLabel:'Nome do projeto',
+  exportCount:function(n,t){return n+' de '+t+' selecionadas';},
+  exportDeselectAll:'Desmarcar todas',exportSelectAll:'Selecionar todas',
+  exportBtn:function(n){return '⬇ Exportar ('+n+') .kada';},
+  importOk:function(n){return '✅ '+n+' entrada(s) importada(s) com todos os arquivos.';},
+  importErr:'Este arquivo não é um .kada válido.',
+  mapDlTitle:'🗺️ Mapas offline',
+  mapDlMsg:'O A.R.I.A precisa de uma primeira conexão à Internet para baixar os mapas. Depois de baixados, ficarão disponíveis offline. O download será feito automaticamente sempre que o dispositivo estiver conectado.',
+  mapDlOk:'Entendido',
+  mapDownloading:'⬇ Baixando mapas...',mapReady:'✓ Mapas disponíveis offline',
+  installApp:'⬇ Instalar app',
+  iosInstallTitle:'📲 Instalar A.R.I.A',
+  iosInstallMsg:'Para instalar no seu iPhone/iPad:\n\n1. Toque no botão Compartilhar (o quadrado com uma seta ↑) na barra do Safari.\n2. Deslize e escolha "Adicionar à Tela de Início".\n3. Toque em "Adicionar" no canto superior.\n\nO A.R.I.A aparecerá como um app na sua tela.',
+  installedMsg:'✓ O app já está instalado',
+  installFileMsg:'Para instalar o A.R.I.A no seu telefone ou PC, o app deve ser aberto a partir de um endereço web (https://), não como arquivo local.\n\nEnvie o arquivo para uma hospedagem gratuita (Netlify, GitHub Pages, Vercel) e abra a partir de lá. Então o botão instalará o app diretamente na sua tela.\n\nNo iPhone: use Compartilhar → Adicionar à Tela de Início.',
+  installMenuMsg:'Para instalar: abra o menu do navegador (⋮ canto superior direito) e escolha "Instalar app" ou "Adicionar à Tela de Início".',
+  newTitle:'Que tipo de registro?',newSub:'Selecione o método para esta sessão.',
+  recStart:'🎙 Iniciar gravação',recStop:'⏹ Parar',recSaving:'⏳ Salvando...',
+  recDot:'⏺ Gravando...',recNative:'🎤 Gravar (nativo)',recLoad:'📂 Carregar áudio',
+  recEmpty:'Sem gravações — use qualquer botão acima',
+  writeMode:'✏️ Escrever',audioMode:'🎙️ Gravar / carregar áudio',
+  textAns:'✏️ Texto',audioAns:'🎙️ Áudio',
+  evLabel:'📎 Evidências (fotos, áudio, vídeo)',
+  evPhoto:'📷 Foto',evAudio:'🎵 Áudio',evVideo:'📁 Vídeo',evRecVid:'🎬 Gravar vídeo',
+  evStopVid:'⏹ Parar',evEmpty:'Sem evidências ainda',
+  qaLabel:'❓ Perguntas & Respostas',qaPH:'Digite uma pergunta e pressione +',
+  qaAdd:'+ Adicionar',qaEmpty:'Sem perguntas ainda.',qaAnsLabel:'Resposta:',
+  permTitle:'PERMISSÃO NECESSÁRIA',permMic:'🎙️ Microfone bloqueado',permCam:'📷 Câmera bloqueada',
+  permSub:'O Chrome bloqueou o acesso. Siga estes passos:',
+  permSteps:['Toque no 🔒 cadeado na barra do Chrome','Toque em "Permissões" ou "Configurações do site"','Encontre a permissão e mude para Permitir ✓','Volte aqui e toque em "Tentar novamente"'],
+  permTip:'💡 Alternativa: use "📂 Carregar áudio" para enviar um arquivo do seu app de voz.',
+  permRetry:'🔄 Tentar novamente',permClose:'Fechar',
+  mapNotesPH:'Notas gerais do mapa...',mapNotesLabel:'📝 Notas do mapa',
+  mapHint:'Toque no mapa para adicionar pontos, linhas ou áreas.',
+  mapAskPt:'Nome para este ponto:',mapAskLine:'Nome para esta linha:',mapAskPoly:'Nome para esta área:',
+  mapPt:'📍 Ponto',mapLine:'〰️ Linha',mapPoly:'⬡ Polígono',mapMove:'✋ Mover',mapNotes:'📝 Notas',mapGPS:'📡',
+  mapDel:'🗑 Excluir',mapLegend:'Legenda',
+  mods:[{l:'Diário de campo',s:'Diário'},{l:'Observação participante',s:'Obs.'},{l:'Grupo focal',s:'G.Focal'},{l:'Etnografia',s:'Etno.'},{l:'Entrevista',s:'Entrev.'},{l:'Cartografia social',s:'Cartog.'}],
+  filters:['Todas','📓 Diário','🔭 Obs.','👥 G.Focal','🌍 Etno.','🎤 Entrev.','🗺️ Cartog.'],
+  obsTypes:['Participante','Não participante'],
+  itvTypes:['Estruturada','Semiestruturada','Não estruturada','Biográfica','Em profundidade'],
+  mapCats:[{id:'punto_interes',l:'Ponto de interesse',i:'📍'},{id:'recurso',l:'Recurso natural',i:'🌿'},{id:'conflicto',l:'Zona de conflito',i:'⚡'},{id:'riesgo',l:'Área de risco',i:'⚠️'},{id:'actor',l:'Ator territorial',i:'👥'},{id:'infraestructura',l:'Infraestrutura',i:'🏗️'},{id:'memoria',l:'Memória histórica',i:'📜'},{id:'potencial',l:'Potencialidade',i:'✨'},{id:'limite',l:'Limite / fronteira',i:'🔴'},{id:'otro',l:'Outro',i:'📌'}],
+  fields:{fecha:'📅 Data',hora:'🕐 Hora início',hora_inicio:'🕐 Hora início',hora_fin:'🕓 Hora fim',lugar:'📍 Local',objetivo:'🎯 Objetivo',actividad:'🔬 Atividade',descripcion:'📝 Descrição detalhada',datos:'📊 Registro de dados',entorno:'🌤 Condições do ambiente',instrumentos:'🛠 Instrumentos',actores:'👥 Atores',interpretacion:'🧠 Interpretação',dificultades:'⚠️ Dificuldades',soluciones:'✅ Soluções',conclusiones:'📌 Conclusões',recomendaciones:'💡 Recomendações',evidencias:'📎 Evidências',tipo:'🔭 Tipo de observação',contexto:'🌐 Contexto',eventos_clave:'⚡ Eventos chave',interacciones:'🔗 Interações',lenguaje:'💬 Linguagem / expressões',reflexion:'🪞 Reflexão do observador',tema:'🗂 Tema',moderador:'🧑‍💼 Moderador',num_participantes:'👥 Nº participantes',caracteristicas:'🪪 Características',preguntas_guia:'❓ Guia de perguntas',desarrollo:'📋 Desenvolvimento',opiniones:'💭 Opiniões',acuerdos:'✅ Acordos',desacuerdos:'❌ Desacordos',citas:'💬 Citações',dinamica:'🔄 Dinâmica',no_verbal:'🤝 Linguagem não verbal',hallazgos:'🔍 Achados',duracion:'⏱ Duração',contexto_cultural:'🌍 Contexto cultural',practicas:'🎭 Práticas / rituais',estructura:'🏛 Estrutura social',entrevistador:'🧑 Entrevistador',perfil:'🧑‍💻 Perfil entrevistado',preguntas:'❓ Perguntas & Respostas',observaciones:'📝 Observações',facilitador:'🧑‍💼 Facilitador',mapa:'🗺️ Mapa interativo',mapa_notas:'📝 Notas do mapa',elementos_naturales:'🌿 Elementos naturais',elementos_construidos:'🏗️ Elementos construídos',actores_territoriales:'👥 Atores territoriais',conflictos:'⚡ Conflitos',recursos:'💎 Recursos',riesgos:'⚠️ Áreas de risco',potencialidades:'✨ Potencialidades',relaciones_poder:'🔗 Relações de poder',memoria_historica:'📜 Memória histórica'},
+  ph:{lugar:'Comunidade, espaço...',instrumentos:'Gravador, câmera...',moderador:'Nome do moderador...',caracteristicas:'Idade, perfil, função...',tema:'Tema principal...',entrevistador:'Nome...',duracion:'Ex.: 3 horas...',facilitador:'Nome do facilitador...'}
+}
+};
+
+/* ═══ T — active language, always valid ═══ */
+var T = LANGS.es;
+
+/* ═══ MODS — module config ═══ */
+var MODS=[
+  {id:'diario',      icon:'📓',color:'#374151'},
+  {id:'observacion', icon:'🔭',color:'#4b5563'},
+  {id:'grupo_focal', icon:'👥',color:'#6b7280'},
+  {id:'etnografia',  icon:'🌍',color:'#52525b'},
+  {id:'entrevista',  icon:'🎤',color:'#71717a'},
+  {id:'cartografia', icon:'🗺️',color:'#334155'},
+];
+function modLabel(id){var m=T.mods[MODS.findIndex(function(x){return x.id===id;})];return m?m.l:id;}
+function modShort(id){var m=T.mods[MODS.findIndex(function(x){return x.id===id;})];return m?m.s:id;}
+function modColor(id){var m=MODS.find(function(x){return x.id===id;});return m?m.color:'#4b5563';}
+function modIcon(id){var m=MODS.find(function(x){return x.id===id;});return m?m.icon:'📄';}
+
+/* ═══ MAP CAT COLORS ═══ */
+var MC=['#6b7280','#6b7280','#6b7280','#6b7280','#6b7280','#6b7280','#374151','#4b5563','#6b7280','#4b5563'];
+function mapCats(){return (T.mapCats||[]).map(function(c,i){return {id:c.id,label:c.l,icon:c.i,color:MC[i]||'#4b5563'};});}
+function mapCatByID(id){return mapCats().find(function(c){return c.id===id;})||{label:id,icon:'📌',color:'#4b5563'};}
+
+/* ═══ SCHEMA — field definitions ═══ */
+function getSchema(modId){
+  var f=T.fields, p=T.ph||{};
+  var baseEndFields=[
+    {k:'dificultades',l:f.dificultades,t:'media'},
+    {k:'conclusiones',l:f.conclusiones,t:'media'},
+    {k:'recomendaciones',l:f.recomendaciones,t:'media'},
+    {k:'evidencias',l:f.evidencias,t:'evidence'},
+  ];
+  var schemas={
+    diario:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora',l:f.hora,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},
+      {k:'objetivo',l:f.objetivo,t:'media'},{k:'actividad',l:f.actividad,t:'media'},
+      {k:'descripcion',l:f.descripcion,t:'media'},{k:'datos',l:f.datos,t:'media'},
+      {k:'entorno',l:f.entorno,t:'media'},{k:'instrumentos',l:f.instrumentos,t:'text',p:p.instrumentos},
+      {k:'actores',l:f.actores,t:'media'},{k:'interpretacion',l:f.interpretacion,t:'media'},
+      {k:'dificultades',l:f.dificultades,t:'media'},{k:'soluciones',l:f.soluciones,t:'media'},
+      {k:'conclusiones',l:f.conclusiones,t:'media'},{k:'recomendaciones',l:f.recomendaciones,t:'media'},
+      {k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+    observacion:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora',l:f.hora,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},
+      {k:'tipo',l:f.tipo,t:'select',opts:T.obsTypes},
+      {k:'objetivo',l:f.objetivo,t:'media'},{k:'contexto',l:f.contexto,t:'media'},
+      {k:'actores',l:f.actores,t:'media'},{k:'descripcion',l:f.descripcion,t:'media'},
+      {k:'eventos_clave',l:f.eventos_clave,t:'media'},{k:'interacciones',l:f.interacciones,t:'media'},
+      {k:'lenguaje',l:f.lenguaje,t:'media'},{k:'datos',l:f.datos,t:'textarea'},
+      {k:'interpretacion',l:f.interpretacion,t:'media'},{k:'reflexion',l:f.reflexion,t:'media'},
+      {k:'dificultades',l:f.dificultades,t:'media'},{k:'conclusiones',l:f.conclusiones,t:'media'},
+      {k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+    grupo_focal:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora_inicio',l:f.hora_inicio,t:'time'},{k:'hora_fin',l:f.hora_fin,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},{k:'tema',l:f.tema,t:'text',p:p.tema},
+      {k:'objetivo',l:f.objetivo,t:'media'},{k:'moderador',l:f.moderador,t:'text',p:p.moderador},
+      {k:'num_participantes',l:f.num_participantes,t:'number'},{k:'caracteristicas',l:f.caracteristicas,t:'text',p:p.caracteristicas},
+      {k:'preguntas_guia',l:f.preguntas_guia,t:'textarea'},{k:'desarrollo',l:f.desarrollo,t:'media'},
+      {k:'opiniones',l:f.opiniones,t:'media'},{k:'acuerdos',l:f.acuerdos,t:'media'},
+      {k:'desacuerdos',l:f.desacuerdos,t:'media'},{k:'citas',l:f.citas,t:'media'},
+      {k:'dinamica',l:f.dinamica,t:'media'},{k:'no_verbal',l:f.no_verbal,t:'media'},
+      {k:'hallazgos',l:f.hallazgos,t:'media'},{k:'interpretacion',l:f.interpretacion,t:'media'},
+      {k:'dificultades',l:f.dificultades,t:'media'},{k:'conclusiones',l:f.conclusiones,t:'media'},
+      {k:'recomendaciones',l:f.recomendaciones,t:'media'},{k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+    etnografia:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora',l:f.hora,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},{k:'duracion',l:f.duracion,t:'text',p:p.duracion},
+      {k:'objetivo',l:f.objetivo,t:'media'},{k:'contexto_cultural',l:f.contexto_cultural,t:'media'},
+      {k:'actores',l:f.actores,t:'media'},{k:'descripcion',l:f.descripcion,t:'media'},
+      {k:'practicas',l:f.practicas,t:'media'},{k:'lenguaje',l:f.lenguaje,t:'media'},
+      {k:'estructura',l:f.estructura,t:'media'},{k:'interacciones',l:f.interacciones,t:'media'},
+      {k:'entorno',l:f.entorno,t:'media'},{k:'instrumentos',l:f.instrumentos,t:'text',p:p.instrumentos},
+      {k:'interpretacion',l:f.interpretacion,t:'media'},{k:'reflexion',l:f.reflexion,t:'media'},
+      {k:'dificultades',l:f.dificultades,t:'media'},{k:'hallazgos',l:f.hallazgos,t:'media'},
+      {k:'conclusiones',l:f.conclusiones,t:'media'},{k:'recomendaciones',l:f.recomendaciones,t:'media'},
+      {k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+    entrevista:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora',l:f.hora,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},
+      {k:'tipo',l:f.tipo,t:'select',opts:T.itvTypes},
+      {k:'entrevistador',l:f.entrevistador,t:'text',p:p.entrevistador},
+      {k:'perfil',l:f.perfil,t:'media'},{k:'objetivo',l:f.objetivo,t:'media'},
+      {k:'preguntas',l:f.preguntas,t:'qa'},
+      {k:'observaciones',l:f.observaciones,t:'media'},{k:'interpretacion',l:f.interpretacion,t:'media'},
+      {k:'dificultades',l:f.dificultades,t:'media'},{k:'conclusiones',l:f.conclusiones,t:'media'},
+      {k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+    cartografia:[
+      {k:'fecha',l:f.fecha,t:'date'},{k:'hora',l:f.hora,t:'time'},
+      {k:'lugar',l:f.lugar,t:'text',p:p.lugar},{k:'facilitador',l:f.facilitador,t:'text',p:p.facilitador},
+      {k:'num_participantes',l:f.num_participantes,t:'number'},{k:'caracteristicas',l:f.caracteristicas,t:'text',p:p.caracteristicas},
+      {k:'objetivo',l:f.objetivo,t:'media'},{k:'contexto',l:f.contexto,t:'media'},
+      {k:'mapa',l:f.mapa,t:'map'},
+      {k:'elementos_naturales',l:f.elementos_naturales,t:'media'},{k:'elementos_construidos',l:f.elementos_construidos,t:'media'},
+      {k:'actores_territoriales',l:f.actores_territoriales,t:'media'},{k:'conflictos',l:f.conflictos,t:'media'},
+      {k:'recursos',l:f.recursos,t:'media'},{k:'riesgos',l:f.riesgos,t:'media'},
+      {k:'potencialidades',l:f.potencialidades,t:'media'},{k:'relaciones_poder',l:f.relaciones_poder,t:'media'},
+      {k:'memoria_historica',l:f.memoria_historica,t:'media'},{k:'interpretacion',l:f.interpretacion,t:'media'},
+      {k:'conclusiones',l:f.conclusiones,t:'media'},{k:'recomendaciones',l:f.recomendaciones,t:'media'},
+      {k:'evidencias',l:f.evidencias,t:'evidence'},
+    ],
+  };
+  return schemas[modId]||[];
+}
+
+
+/* ═══ iOS DETECTION ═══ */
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+var isIOSSafari = isIOS || isSafari;
+
+/* ═══ APP STATE ═══ */
+var APP={entries:[],openCards:{},filterType:'',search:''};
+var _maps={};
+
+/* ═══ LANGUAGE SCREEN (rendered by JS) ═══ */
+function showLangScreen(){
+  var existing=document.getElementById('lang-screen');
+  if(existing) existing.remove();
+  var screen=mk('div','');screen.id='lang-screen';
+  screen.innerHTML='<div class="lang-logo">📱</div><div class="lang-title">A.R.I.A</div><div class="lang-sub">SELECT LANGUAGE · SELECCIONA IDIOMA</div><div class="lang-grid" id="lg"></div>';
+  document.body.prepend(screen);
+  var grid=document.getElementById('lg');
+  [['es','🇪🇸','Español','Español'],['en','🇬🇧','English','English'],['fr','🇫🇷','Français','Français'],['pt','🇧🇷','Português','Português']].forEach(function(row){
+    var btn=mk('button','lang-btn');
+    btn.innerHTML='<span class="lang-flag">'+row[1]+'</span><span class="lang-name">'+row[2]+'</span><span class="lang-native">'+row[3]+'</span>';
+    btn.onclick=function(){applyLang(row[0]);};
+    grid.appendChild(btn);
+  });
+}
+
+/* ═══ MAPAS OFFLINE: caché automática de tiles ═══ */
+var MAP_CACHE='aria_map_tiles_v1';
+// Tiles base a precachear: vista mundial + Colombia (zoom bajo→medio) para garantizar visualización siempre.
+function tileURLs(){
+  var urls=[];
+  // Nivel mundial 0-3 (cobertura global, pocos tiles)
+  for(var z=0;z<=3;z++){var n=Math.pow(2,z);for(var x=0;x<n;x++){for(var y=0;y<n;y++){urls.push('https://a.tile.openstreetmap.org/'+z+'/'+x+'/'+y+'.png');}}}
+  // Región Colombia/Norte de Santander con más detalle (zoom 4-8)
+  function lon2x(lon,z){return Math.floor((lon+180)/360*Math.pow(2,z));}
+  function lat2y(lat,z){var r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z));}
+  var bbox={w:-79,e:-66,s:-4,n:13}; // Colombia aprox.
+  for(var z2=4;z2<=8;z2++){
+    var x0=lon2x(bbox.w,z2),x1=lon2x(bbox.e,z2),y0=lat2y(bbox.n,z2),y1=lat2y(bbox.s,z2);
+    for(var xx=x0;xx<=x1;xx++){for(var yy=y0;yy<=y1;yy++){urls.push('https://a.tile.openstreetmap.org/'+z2+'/'+xx+'/'+yy+'.png');}}
+  }
+  return urls;
+}
+var _mapDlInProgress=false, _mapDlDone=false;
+function statusPill(txt,ok){
+  var dot=document.getElementById('autosave-dot');
+  if(!dot)return;
+  dot.textContent=txt;dot.style.display='block';dot.style.opacity='1';
+  if(ok){setTimeout(function(){dot.style.opacity='0';setTimeout(function(){dot.style.display='none';},400);},2200);}
+}
+function downloadMapTiles(){
+  if(_mapDlInProgress||_mapDlDone)return;
+  if(!('caches' in window))return; // navegador sin Cache API
+  if(!navigator.onLine)return;
+  _mapDlInProgress=true;
+  statusPill(T.mapDownloading,false);
+  caches.open(MAP_CACHE).then(function(cache){
+    var urls=tileURLs();
+    var done=0, batch=8, i=0;
+    function next(){
+      if(i>=urls.length){
+        _mapDlInProgress=false;_mapDlDone=true;
+        try{localStorage.setItem('aria_maps_cached','1');}catch(e){}
+        statusPill(T.mapReady,true);
+        return;
+      }
+      var slice=urls.slice(i,i+batch);i+=batch;
+      Promise.all(slice.map(function(u){
+        return cache.match(u).then(function(hit){
+          if(hit){done++;return;}
+          return fetch(u,{mode:'no-cors'}).then(function(res){return cache.put(u,res);}).catch(function(){});
+        });
+      })).then(function(){setTimeout(next,60);}); // throttle: respeta la política de uso de OSM
+    }
+    next();
+  }).catch(function(){_mapDlInProgress=false;});
+}
+// Auto-disparo: al cargar (si hay red) y cada vez que el dispositivo vuelve a estar online.
+function armMapAutoDownload(){
+  if(navigator.onLine)downloadMapTiles();
+  window.addEventListener('online',function(){_mapDlDone=false;downloadMapTiles();});
+}
+// Popup informativo tras elegir idioma (solo la primera vez)
+function showMapInfoPopup(){
+  if(localStorage.getItem('aria_map_popup_seen')==='1'){armMapAutoDownload();return;}
+  OV.innerHTML='';
+  var box=mk('div','mbox');box.style.maxWidth='360px';box.style.textAlign='center';
+  box.appendChild(mk('h2','mtitle',T.mapDlTitle));
+  var msg=mk('p','');msg.style.cssText='color:#6b7280;font-size:13px;line-height:1.6;margin:12px 0 20px';msg.textContent=T.mapDlMsg;
+  box.appendChild(msg);
+  var ok=mk('button','btn btn-amber',T.mapDlOk);ok.style.width='100%';ok.style.padding='13px';
+  ok.onclick=function(){localStorage.setItem('aria_map_popup_seen','1');closeModal();armMapAutoDownload();};
+  box.appendChild(ok);
+  OV.appendChild(box);OV.style.display='flex';
+}
+
+function applyLang(code){
+  T=LANGS[code]||LANGS.es;
+  localStorage.setItem('aria_lang',code);
+  document.documentElement.lang=code;
+  // Hide lang screen
+  var ls=document.getElementById('lang-screen');
+  if(ls){ls.style.opacity='0';setTimeout(function(){if(ls.parentNode)ls.remove();},400);}
+  // Show app
+  var app=document.getElementById('app');
+  if(app) app.style.display='';
+  updateStaticUI();
+  renderAll();
+  setTimeout(showMapInfoPopup,500);
+}
+
+function updateStaticUI(){
+  var el=function(id){return document.getElementById(id);};
+  var qs=function(s){return document.querySelector(s);};
+  var appSub=el('app-sub'); if(appSub && T.appSub) appSub.innerHTML=T.appSub;
+  var btnNew=el('btnNew'); if(btnNew) btnNew.textContent=T.btnNew;
+  var btnExp=el('btnExport'); if(btnExp) btnExp.textContent=T.btnExport;
+  var btnImp=el('btnImport'); if(btnImp) btnImp.textContent=T.btnImport;
+  var btnL=el('btnLang'); if(btnL) btnL.textContent=T.btnLang||'🌐';
+  var lblT=el('lbl-total'); if(lblT) lblT.textContent=T.statTotal;
+  var lblS=el('lbl-saved'); if(lblS) lblS.textContent=T.statSaved;
+  var srch=el('search'); if(srch) srch.placeholder=T.searchPH;
+  var iMsg=el('install-msg'); if(iMsg) iMsg.textContent=T.installMsg;
+  var iBn=el('btn-install'); if(iBn) iBn.textContent=T.installBtn;
+  var hInst=el('btnInstallHdr'); if(hInst) hInst.title=(T.installApp||'Install').replace(/^[⬇\s]+/,'');
+  // Rebuild filter pills
+  var pills=el('fpills');
+  if(pills){
+    pills.innerHTML='';
+    T.filters.forEach(function(label,i){
+      var b=mk('button','fpill'+(i===0&&!APP.filterType?' active':''));
+      b.dataset.t=i===0?'':MODS[i-1]?MODS[i-1].id:'';
+      b.textContent=label;
+      b.onclick=function(){
+        APP.filterType=b.dataset.t||'';
+        document.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');
+        renderAll();
+      };
+      pills.appendChild(b);
+    });
+  }
+}
+
+/* ═══ HELPERS ═══ */
+function mk(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e;}
+function ge(id){return APP.entries.find(function(e){return e.id===id;});}
+function ued(id,k,v){APP.entries=APP.entries.map(function(e){return e.id===id?Object.assign({},e,{data:Object.assign({},e.data,{[k]:v})}):e;});autoSave();}
+function addAud(id,k,a){var e=ge(id);ued(id,k+'_audios',(e.data[k+'_audios']||[]).concat([a]));}
+function remAud(id,k,i){var e=ge(id);ued(id,k+'_audios',(e.data[k+'_audios']||[]).filter(function(_,j){return j!==i;}));}
+function addEv(id,f){var e=ge(id);ued(id,'evidencias',(e.data.evidencias||[]).concat([f]));}
+function remEv(id,i){var e=ge(id);ued(id,'evidencias',(e.data.evidencias||[]).filter(function(_,j){return j!==i;}));}
+function addQ(id,txt){var e=ge(id);ued(id,'preguntas',(e.data.preguntas||[]).concat([{qid:Date.now(),text:txt,modo:'text',rt:'',ra:[]}]));}
+function remQ(id,qid){var e=ge(id);ued(id,'preguntas',(e.data.preguntas||[]).filter(function(q){return q.qid!==qid;}));}
+function updQ(id,qid,u){var e=ge(id);ued(id,'preguntas',(e.data.preguntas||[]).map(function(q){return q.qid===qid?Object.assign({},q,u):q;}));}
+
+/* ═══ BASE64 ═══ */
+function blobToBase64(blob){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onloadend=function(){res(r.result);};
+    r.onerror=function(){rej(r.error);};
+    r.readAsDataURL(blob);
+  });
+}
+function fileToBase64(file){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onloadend=function(){res(r.result);};
+    r.onerror=function(){rej(r.error);};
+    r.readAsDataURL(file);
+  });
+}
+
+/* ═══ AUDIO ENGINE ═══ */
+var _aRec=null,_aStream=null,_aChunks=[];
+var _vRec=null,_vStream=null,_vChunks=[];
+
+function getBestAudioMime(){
+  if(typeof MediaRecorder==='undefined') return null;
+  return ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4',''].find(function(m){return m===''||MediaRecorder.isTypeSupported(m);});
+}
+function mimeExt(mt){return mt&&mt.includes('ogg')?'ogg':mt&&mt.includes('mp4')?'mp4':'webm';}
+
+function startAudio(btn,statusEl){
+  return new Promise(function(resolve){
+    if(typeof MediaRecorder==='undefined'){alert(T.recNative);resolve(false);return;}
+    if(isIOSSafari){
+      // iOS Safari MediaRecorder not reliable - use native capture instead
+      alert('En iPhone/iPad usa el boton \uD83C\uDF99 Grabar (nativo) para grabar audio.');
+      resolve(false);return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function(stream){
+      _aStream=stream;_aChunks=[];
+      var mime=getBestAudioMime();
+      try{_aRec=mime?new MediaRecorder(_aStream,{mimeType:mime}):new MediaRecorder(_aStream);}
+      catch(e){try{_aRec=new MediaRecorder(_aStream);}catch(e2){resolve(false);return;}}
+      _aRec.ondataavailable=function(e){if(e.data&&e.data.size>0)_aChunks.push(e.data);};
+      _aRec.onerror=function(e){console.error('rec err',e);};
+      _aRec.start(1000);
+      btn.textContent=T.recStop;btn.style.background='#9ca3af';btn.dataset.rec='1';
+      if(statusEl)statusEl.style.display='flex';
+      resolve(true);
+    }).catch(function(err){
+      if(_aStream)_aStream.getTracks().forEach(function(t){t.stop();});
+      _aStream=null;_aChunks=[];_aRec=null;
+      if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'||err.name==='SecurityError') showPermHelp('audio');
+      else if(err.name==='NotFoundError') alert('Microphone not found.');
+      else if(err.name==='NotReadableError'||err.name==='AbortError') alert('Microphone in use by another app.');
+      else showPermHelp('audio');
+      resolve(false);
+    });
+  });
+}
+
+function stopAudio(btn,statusEl){
+  return new Promise(function(resolve){
+    if(!_aRec||_aRec.state==='inactive'){resolve(null);return;}
+    var recMime=_aRec.mimeType;
+    // iOS Safari needs a small delay after requestData
+    _aRec.onstop=function(){
+      btn.textContent=T.recStart;btn.style.background='#e5e7eb';btn.dataset.rec='0';
+      if(statusEl)statusEl.style.display='none';
+      if(_aStream){_aStream.getTracks().forEach(function(t){t.stop();});_aStream=null;}
+      if(!_aChunks.length){_aRec=null;_aChunks=[];resolve(null);return;}
+      var mt=recMime||'audio/webm';
+      var blob=new Blob(_aChunks,{type:mt});
+      var ext=mimeExt(mt);
+      _aRec=null;_aChunks=[];
+      blobToBase64(blob).then(function(dataUrl){
+        if(!dataUrl||dataUrl.length<100){resolve(null);return;}
+        resolve({url:dataUrl,name:'rec_'+Date.now()+'.'+ext,size:(blob.size/1024).toFixed(1)+' KB',mimeType:mt});
+      }).catch(function(){resolve(null);});
+    };
+    if(_aRec.state==='recording') try{_aRec.requestData();}catch(e){}
+    _aRec.stop();
+  });
+}
+
+function startVideo(btn,preview,statusEl){
+  return new Promise(function(resolve){
+    navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(function(stream){
+      _vStream=stream;_vChunks=[];
+      if(preview){preview.srcObject=_vStream;preview.style.display='block';preview.play().catch(function(){});}
+      var mimes=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4',''];
+      var mime=mimes.find(function(m){return m===''||(typeof MediaRecorder!=='undefined'&&MediaRecorder.isTypeSupported(m));});
+      try{_vRec=mime?new MediaRecorder(_vStream,{mimeType:mime}):new MediaRecorder(_vStream);}
+      catch(e){_vRec=new MediaRecorder(_vStream);}
+      _vRec.ondataavailable=function(e){if(e.data&&e.data.size>0)_vChunks.push(e.data);};
+      _vRec.start(1000);
+      btn.textContent=T.evStopVid;btn.style.background='#9ca3af';btn.dataset.rec='1';
+      if(statusEl)statusEl.style.display='flex';
+      resolve(true);
+    }).catch(function(err){
+      if(err.name==='NotAllowedError') showPermHelp('video');
+      else alert('Camera error: '+err.name);
+      resolve(false);
+    });
+  });
+}
+function stopVideo(btn,preview,statusEl){
+  return new Promise(function(resolve){
+    if(!_vRec||_vRec.state==='inactive'){resolve(null);return;}
+    var recMime=_vRec.mimeType;
+    _vRec.onstop=function(){
+      btn.textContent=T.evRecVid;btn.style.background='#e5e7eb';btn.dataset.rec='0';
+      if(statusEl)statusEl.style.display='none';
+      if(_vStream){_vStream.getTracks().forEach(function(t){t.stop();});_vStream=null;}
+      if(preview){preview.srcObject=null;preview.style.display='none';}
+      if(!_vChunks.length){_vRec=null;_vChunks=[];resolve(null);return;}
+      var mt=recMime||'video/webm';
+      var blob=new Blob(_vChunks,{type:mt});
+      var ext=mt.includes('mp4')?'mp4':'webm';
+      _vRec=null;_vChunks=[];
+      blobToBase64(blob).then(function(dataUrl){
+        resolve(dataUrl?{url:dataUrl,name:'video_'+Date.now()+'.'+ext,size:(blob.size/1024).toFixed(1)+' KB',type:'video',mimeType:mt}:null);
+      }).catch(function(){resolve(null);});
+    };
+    if(_vRec.state==='recording') try{_vRec.requestData();}catch(e){}
+    _vRec.stop();
+  });
+}
+
+/* ═══ PERMISSION HELP ═══ */
+function showPermHelp(type){
+  var ex=document.getElementById('perm-modal');if(ex)ex.remove();
+  var modal=mk('div','');modal.id='perm-modal';
+  var box=mk('div','perm-box');
+  box.appendChild(mk('div','meyebrow',T.permTitle));
+  box.appendChild(mk('h2','mtitle',type==='audio'?T.permMic:T.permCam));
+  box.appendChild(mk('p','msub',T.permSub));
+  (T.permSteps||[]).forEach(function(step,i){
+    var row=mk('div','perm-step');
+    var num=mk('span','perm-num',String(i+1));
+    var txt=mk('span','',step);txt.style.cssText='color:#1f2937;font-size:13px';
+    row.appendChild(num);row.appendChild(txt);box.appendChild(row);
+  });
+  var tip=mk('div','perm-tip',T.permTip||'');box.appendChild(tip);
+  var btns=mk('div','perm-btns');
+  var retry=mk('button','btn btn-amber',T.permRetry);retry.style.flex='1';retry.onclick=function(){modal.remove();};
+  var close=mk('button','btn btn-cancel',T.permClose);close.onclick=function(){modal.remove();};
+  btns.appendChild(retry);btns.appendChild(close);box.appendChild(btns);
+  modal.appendChild(box);document.body.appendChild(modal);
+  modal.onclick=function(e){if(e.target===modal)modal.remove();};
+}
+
+/* ═══ AUDIO UI BUILDER ═══ */
+function buildAudioUI(id,k){
+  var box=mk('div','abox');
+  var row=mk('div','btn-row');
+  var statusEl=mk('div','rec-status');
+  statusEl.innerHTML='<span class="rec-dot"></span><span class="rec-timer"> 00:00</span>';
+  var _timer=null,_secs=0;
+
+  // GRABACIÓN NATIVA: el botón principal abre la grabadora de audio del sistema (fiable en Android/iOS/PC)
+  var recBtn=mk('button','btn btn-green',T.recStart);
+  var recIn=mk('input');recIn.type='file';recIn.accept='audio/*';recIn.setAttribute('capture','microphone');recIn.style.display='none';
+  recIn.onchange=function(){
+    var f=recIn.files[0];if(!f)return;
+    fileToBase64(f).then(function(du){
+      if(du&&du.indexOf('data:')===0){
+        addAud(id,k,{url:du,name:f.name||('rec_'+Date.now()+'.m4a'),size:(f.size/1024).toFixed(1)+' KB',mimeType:f.type});
+        recIn.value='';box.replaceWith(buildAudioUI(id,k));
+      }
+    }).catch(function(){});
+  };
+  recBtn.onclick=function(){recIn.click();};
+
+  var capIn=mk('input');capIn.type='file';capIn.accept='audio/*';capIn.setAttribute('capture','microphone');capIn.style.display='none';
+  capIn.onchange=function(){
+    var f=capIn.files[0];if(!f)return;
+    fileToBase64(f).then(function(du){
+      if(du&&du.indexOf('data:')===0){
+        addAud(id,k,{url:du,name:f.name,size:(f.size/1024).toFixed(1)+' KB',mimeType:f.type});
+        capIn.value='';box.replaceWith(buildAudioUI(id,k));
+      }
+    }).catch(function(){});
+  };
+
+  var upIn=mk('input');upIn.type='file';upIn.accept='audio/*,.mp3,.wav,.ogg,.m4a,.aac,.opus,.webm';upIn.multiple=true;upIn.style.display='none';
+  upIn.onchange=function(){
+    var files=Array.prototype.slice.call(upIn.files);
+    var proms=files.map(function(f){
+      return fileToBase64(f).then(function(du){
+        if(du&&du.indexOf('data:')===0) addAud(id,k,{url:du,name:f.name,size:(f.size/1024).toFixed(1)+' KB',mimeType:f.type});
+      }).catch(function(){});
+    });
+    Promise.all(proms).then(function(){upIn.value='';box.replaceWith(buildAudioUI(id,k));});
+  };
+  var upBtn=mk('button','btn btn-blue',T.recLoad);upBtn.onclick=function(){upIn.click();};
+
+  row.appendChild(recBtn);row.appendChild(upBtn);
+  row.appendChild(recIn);row.appendChild(upIn);
+  box.appendChild(row);box.appendChild(statusEl);
+
+  var audios=(ge(id).data[k+'_audios']||[]);
+  if(!audios.length){box.appendChild(mk('div','hint',T.recEmpty));}
+  else {
+    audios.forEach(function(a,i){
+      var item=mk('div','audio-item');
+      var nm=mk('span','audio-name','🎙️ '+a.name+(a.size?'  ·  '+a.size:''));
+      var aud=mk('audio','aplayer');aud.controls=true;aud.preload='none';
+      if(a.url&&a.url.startsWith('data:'))aud.src=a.url;
+      var del=mk('button','del-btn','✕');
+      del.onclick=function(){remAud(id,k,i);box.replaceWith(buildAudioUI(id,k));};
+      item.appendChild(nm);item.appendChild(aud);item.appendChild(del);box.appendChild(item);
+    });
+  }
+  return box;
+}
+
+/* ═══ EVIDENCE UI ═══ */
+function buildEvidenceUI(id){
+  var box=mk('div','evbox');
+  var row=mk('div','btn-row');
+  var statusEl=mk('div','rec-status');statusEl.innerHTML='<span class="rec-dot"></span><span class="rec-timer"> 0:00</span>';
+  var live=mk('video','live-prev');live.muted=true;live.playsInline=true;live.autoplay=true;
+
+  var phIn=mk('input');phIn.type='file';phIn.accept='image/*';phIn.setAttribute('capture','environment');phIn.multiple=true;phIn.style.display='none';
+  phIn.onchange=function(){
+    var files=Array.prototype.slice.call(phIn.files);
+    var proms=files.map(function(f){
+      return fileToBase64(f).then(function(du){
+        if(du)addEv(id,{id:Date.now()+Math.random(),type:'image',name:f.name,url:du,size:(f.size/1024).toFixed(1)+' KB'});
+      }).catch(function(){});
+    });
+    Promise.all(proms).then(function(){phIn.value='';box.replaceWith(buildEvidenceUI(id));});
+  };
+  var phBtn=mk('button','btn btn-blue',T.evPhoto);phBtn.onclick=function(){phIn.click();};
+
+  var auIn=mk('input');auIn.type='file';auIn.accept='audio/*,.mp3,.wav,.ogg,.m4a';auIn.multiple=true;auIn.style.display='none';
+  auIn.onchange=function(){
+    var files=Array.prototype.slice.call(auIn.files);
+    var proms=files.map(function(f){
+      return fileToBase64(f).then(function(du){
+        if(du)addEv(id,{id:Date.now()+Math.random(),type:'audio',name:f.name,url:du,size:(f.size/1024).toFixed(1)+' KB'});
+      }).catch(function(){});
+    });
+    Promise.all(proms).then(function(){auIn.value='';box.replaceWith(buildEvidenceUI(id));});
+  };
+  var auBtn=mk('button','btn btn-purple',T.evAudio);auBtn.onclick=function(){auIn.click();};
+
+  var viIn=mk('input');viIn.type='file';viIn.accept='video/*';viIn.multiple=true;viIn.style.display='none';
+  viIn.onchange=function(){
+    var files=Array.prototype.slice.call(viIn.files);
+    var proms=files.map(function(f){
+      return fileToBase64(f).then(function(du){
+        if(du)addEv(id,{id:Date.now()+Math.random(),type:'video',name:f.name,url:du,size:(f.size/1024).toFixed(1)+' KB'});
+      }).catch(function(){});
+    });
+    Promise.all(proms).then(function(){viIn.value='';box.replaceWith(buildEvidenceUI(id));});
+  };
+  var viBtn=mk('button','btn btn-green2',T.evVideo);viBtn.onclick=function(){viIn.click();};
+
+  // GRABACIÓN NATIVA DE VIDEO: abre la cámara del sistema (fiable en Android/iOS/PC)
+  var vrIn=mk('input');vrIn.type='file';vrIn.accept='video/*';vrIn.setAttribute('capture','environment');vrIn.style.display='none';
+  vrIn.onchange=function(){
+    var f=vrIn.files[0];if(!f)return;
+    fileToBase64(f).then(function(du){
+      if(du&&du.indexOf('data:')===0){
+        addEv(id,{id:Date.now(),type:'video',name:f.name||('video_'+Date.now()+'.mp4'),url:du,size:(f.size/1024).toFixed(1)+' KB'});
+        vrIn.value='';box.replaceWith(buildEvidenceUI(id));
+      }
+    }).catch(function(){});
+  };
+  var vrBtn=mk('button','btn btn-vid',T.evRecVid);
+  vrBtn.onclick=function(){vrIn.click();};
+
+  row.appendChild(phBtn);row.appendChild(phIn);
+  row.appendChild(auBtn);row.appendChild(auIn);
+  row.appendChild(viBtn);row.appendChild(viIn);
+  row.appendChild(vrBtn);row.appendChild(vrIn);
+  box.appendChild(row);
+
+  var files=ge(id).data.evidencias||[];
+  if(!files.length){box.appendChild(mk('div','hint',T.evEmpty));}
+  else{
+    var grid=mk('div','ev-grid');
+    files.forEach(function(f,i){
+      var card=mk('div','ev-card');
+      if(f.type==='image'){var img=mk('img','ev-img');img.src=f.url;img.alt=f.name;card.appendChild(img);}
+      else if(f.type==='video'){var v=mk('video','ev-vid');v.src=f.url;v.controls=true;card.appendChild(v);}
+      else{card.appendChild(mk('div','ev-aud-icon','🎵'));var a=mk('audio','ev-aud');a.controls=true;if(f.url&&f.url.startsWith('data:'))a.src=f.url;card.appendChild(a);}
+      card.appendChild(mk('div','ev-name',f.name));
+      var d=mk('button','ev-del','✕');d.onclick=function(){remEv(id,i);box.replaceWith(buildEvidenceUI(id));};
+      card.appendChild(d);grid.appendChild(card);
+    });
+    box.appendChild(grid);
+  }
+  return box;
+}
+
+/* ═══ QA AUDIO ═══ */
+function buildQAaudio(id,qid){
+  var q=(ge(id).data.preguntas||[]).find(function(q){return q.qid===qid;});
+  var box=mk('div','abox');
+  var row=mk('div','btn-row');
+  var statusEl=mk('div','rec-status');statusEl.innerHTML='<span class="rec-dot"></span><span class="rec-timer"> 00:00</span>';
+  var _timer=null,_secs=0;
+
+  var recBtn=mk('button','btn btn-green',T.recStart);
+  var recIn=mk('input');recIn.type='file';recIn.accept='audio/*';recIn.setAttribute('capture','microphone');recIn.style.display='none';
+  recIn.onchange=function(){
+    var f=recIn.files[0];if(!f)return;
+    fileToBase64(f).then(function(du){
+      if(du&&du.indexOf('data:')===0){
+        var cur=(ge(id).data.preguntas||[]).find(function(q){return q.qid===qid;});
+        updQ(id,qid,{ra:(cur&&cur.ra?cur.ra:[]).concat([{url:du,name:f.name||('rec_'+Date.now()+'.m4a'),size:(f.size/1024).toFixed(1)+' KB',mimeType:f.type}])});
+        recIn.value='';box.replaceWith(buildQAaudio(id,qid));
+      }
+    }).catch(function(){});
+  };
+  recBtn.onclick=function(){recIn.click();};
+  var upIn=mk('input');upIn.type='file';upIn.accept='audio/*';upIn.style.display='none';
+  upIn.onchange=function(){
+    var files=Array.prototype.slice.call(upIn.files);
+    var proms=files.map(function(f){
+      return fileToBase64(f).then(function(du){
+        if(du&&du.indexOf('data:')===0){
+          var cur=(ge(id).data.preguntas||[]).find(function(q){return q.qid===qid;});
+          updQ(id,qid,{ra:(cur&&cur.ra?cur.ra:[]).concat([{url:du,name:f.name,size:(f.size/1024).toFixed(1)+' KB',mimeType:f.type}])});
+        }
+      }).catch(function(){});
+    });
+    Promise.all(proms).then(function(){upIn.value='';box.replaceWith(buildQAaudio(id,qid));});
+  };
+  var upBtn=mk('button','btn btn-blue',T.recLoad);upBtn.onclick=function(){upIn.click();};
+  row.appendChild(recBtn);row.appendChild(upBtn);row.appendChild(recIn);row.appendChild(upIn);
+  box.appendChild(row);box.appendChild(statusEl);
+  ((q&&q.ra)||[]).forEach(function(a,i){
+    var item=mk('div','audio-item');
+    item.appendChild(mk('span','audio-name','🎙️ '+a.name+(a.size?'  ·  '+a.size:'')));
+    var aud=mk('audio','aplayer');aud.controls=true;aud.preload='none';if(a.url&&a.url.startsWith('data:'))aud.src=a.url;
+    item.appendChild(aud);
+    var d=mk('button','del-btn','✕');d.onclick=function(){var cur=(ge(id).data.preguntas||[]).find(function(q){return q.qid===qid;});updQ(id,qid,{ra:((cur&&cur.ra)||[]).filter(function(_,j){return j!==i;})});box.replaceWith(buildQAaudio(id,qid));};
+    item.appendChild(d);box.appendChild(item);
+  });
+  return box;
+}
+
+/* ═══ MAP UI ═══ */
+var _mapMaps={};
+function buildMapUI(entryId){
+  var wrap=mk('div','');
+  var mapId='aria-map-'+entryId;
+  var toolbar=mk('div','map-toolbar');
+  var activeMode='marker',drawPts=[],drawLine=null,drawPoly=null;
+
+  var cats=mapCats();
+  var catSel=mk('select','finput');catSel.style.cssText='flex:1;min-width:100px;max-width:160px;padding:6px 8px;font-size:12px';
+  cats.forEach(function(c){var o=mk('option');o.value=c.id;o.textContent=c.icon+' '+c.label;catSel.appendChild(o);});
+
+  function mkBtn(lbl,active){var b=mk('button','map-tool-btn'+(active?' active-tool':''),lbl);return b;}
+  var btnPt=mkBtn(T.mapPt,true),btnLn=mkBtn(T.mapLine,false),btnPl=mkBtn(T.mapPoly,false),btnMv=mkBtn(T.mapMove,false),btnNt=mkBtn(T.mapNotes,false);
+
+  function setMode(m,btn){
+    activeMode=m;drawPts=[];
+    if(drawLine){drawLine.remove();drawLine=null;} if(drawPoly){drawPoly.remove();drawPoly=null;}
+    [btnPt,btnLn,btnPl,btnMv].forEach(function(b){b.classList.remove('active-tool');});
+    btn.classList.add('active-tool');
+    var mo=_mapMaps[mapId];if(mo)mo._container.style.cursor=(m==='none'?'grab':'crosshair');
+  }
+  btnPt.onclick=function(){setMode('marker',btnPt);};
+  btnLn.onclick=function(){setMode('line',btnLn);};
+  btnPl.onclick=function(){setMode('polygon',btnPl);};
+  btnMv.onclick=function(){setMode('none',btnMv);};
+
+  var notesOpen=false;
+  var notesPanel=mk('div','');notesPanel.style.display='none';
+  btnNt.onclick=function(){notesOpen=!notesOpen;notesPanel.style.display=notesOpen?'':'none';};
+
+  toolbar.appendChild(catSel);toolbar.appendChild(btnPt);toolbar.appendChild(btnLn);toolbar.appendChild(btnPl);toolbar.appendChild(btnMv);toolbar.appendChild(btnNt);
+  wrap.appendChild(toolbar);
+
+  var mapDiv=mk('div','map-container');mapDiv.id=mapId;mapDiv.style.height='320px';wrap.appendChild(mapDiv);
+  var listWrap=mk('div','');listWrap.id='mlist-'+entryId;wrap.appendChild(listWrap);
+
+  var notesTA=mk('textarea','finput');notesTA.rows=3;notesTA.placeholder=T.mapNotesPH;
+  notesTA.value=ge(entryId).data.mapa_notas||'';
+  notesTA.oninput=function(){ued(entryId,'mapa_notas',notesTA.value);};
+  notesPanel.appendChild(mk('label','flabel',T.mapNotesLabel));notesPanel.appendChild(notesTA);
+  wrap.appendChild(notesPanel);
+
+  setTimeout(function(){
+    whenLeaflet(function(){
+      if(_mapMaps[mapId]) return;
+      var sv=ge(entryId).data.mapa_view||{lat:4.57,lng:-74.3,zoom:6};
+      var map=L.map(mapId,{zoomControl:true,attributionControl:true}).setView([sv.lat,sv.lng],sv.zoom);
+      map.on('moveend',function(){var c=map.getCenter();ued(entryId,'mapa_view',{lat:c.lat,lng:c.lng,zoom:map.getZoom()});});
+      L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,subdomains:['a'],crossOrigin:true,attribution:'© OSM'}).addTo(map);
+      // Al abrir un mapa, asegurar que la caché offline esté activa
+      armMapAutoDownload();
+      _mapMaps[mapId]=map;
+
+      var md=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+      (md.markers||[]).forEach(function(m){addMapMarker(map,entryId,m,false);});
+      (md.lines||[]).forEach(function(l){addMapLine(map,entryId,l,false);});
+      (md.polygons||[]).forEach(function(p){addMapPoly(map,entryId,p,false);});
+      refreshMapList(entryId);
+
+      map.on('click',function(e){
+        var cat=mapCats().find(function(c){return c.id===catSel.value;})||mapCats()[0];
+        if(activeMode==='marker'){
+          promptModal(T.mapAskPt,'',function(label){
+            if(label===null)return;
+            var item={id:Date.now(),type:'marker',cat:catSel.value,lat:e.latlng.lat,lng:e.latlng.lng,label:label||cat.label};
+            var md2=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+            md2.markers=(md2.markers||[]).concat([item]);ued(entryId,'mapa',Object.assign({},md2));
+            addMapMarker(map,entryId,item,true);refreshMapList(entryId);
+          });
+        } else if(activeMode==='line'||activeMode==='polygon'){
+          drawPts.push([e.latlng.lat,e.latlng.lng]);
+          var col=mapCats().find(function(c){return c.id===catSel.value;})||mapCats()[0];
+          if(drawLine)drawLine.remove(); if(drawPoly)drawPoly.remove();
+          if(activeMode==='line')drawLine=L.polyline(drawPts,{color:col.color,weight:3,dashArray:'6,4'}).addTo(map);
+          else drawPoly=L.polygon(drawPts,{color:col.color,weight:2,fillOpacity:.2}).addTo(map);
+        }
+      });
+      map.on('dblclick',function(e){
+        e.originalEvent.preventDefault();
+        var col=mapCats().find(function(c){return c.id===catSel.value;})||mapCats()[0];
+        if(activeMode==='line'&&drawPts.length>=2){
+          promptModal(T.mapAskLine,'',function(label){
+            label=label||T.mapLine;
+            var item={id:Date.now(),type:'line',cat:catSel.value,points:drawPts.slice(),label:label};
+            if(drawLine){drawLine.remove();drawLine=null;}
+            var md2=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+            md2.lines=(md2.lines||[]).concat([item]);ued(entryId,'mapa',Object.assign({},md2));
+            addMapLine(map,entryId,item,true);refreshMapList(entryId);drawPts=[];
+          });
+        } else if(activeMode==='polygon'&&drawPts.length>=3){
+          promptModal(T.mapAskPoly,'',function(label){
+            label=label||T.mapPoly;
+            var item={id:Date.now(),type:'polygon',cat:catSel.value,points:drawPts.slice(),label:label};
+            if(drawPoly){drawPoly.remove();drawPoly=null;}
+            var md2=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+            md2.polygons=(md2.polygons||[]).concat([item]);ued(entryId,'mapa',Object.assign({},md2));
+            addMapPoly(map,entryId,item,true);refreshMapList(entryId);drawPts=[];
+          });
+        }
+      });
+
+      var gpsCtrl=L.control({position:'topleft'});
+      gpsCtrl.onAdd=function(){var d=mk('div','');d.style.cssText='background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:6px 10px;cursor:pointer;color:#374151;font-size:14px;margin-top:4px';d.innerHTML='📡';d.onclick=function(){map.locate({setView:true,maxZoom:16});};return d;};
+      gpsCtrl.addTo(map);
+      map.on('locationfound',function(e){L.circle(e.latlng,{radius:e.accuracy/2,color:'#374151',fillOpacity:.15}).addTo(map);});
+
+      setTimeout(function(){map.invalidateSize();},300);
+    });
+  },120);
+  return wrap;
+}
+
+function makeMarkerIcon(catId){
+  var c=mapCatByID(catId);
+  return L.divIcon({html:'<div style="background:'+c.color+';width:26px;height:26px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:13px">'+c.icon+'</div>',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-14],className:''});
+}
+function popupHTML(item,entryId,itype){
+  var c=mapCatByID(item.cat);
+  return '<div style="font-size:13px;min-width:130px;padding:4px"><b style="color:#111827">'+item.label+'</b><br><span style="color:'+c.color+';font-size:11px">'+c.icon+' '+c.label+'</span><br><button onclick="removeMapEl(\''+entryId+'\',\''+itype+'\','+item.id+')" style="margin-top:6px;background:#9ca3af;border:none;color:white;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer">'+T.mapDel+'</button></div>';
+}
+function addMapMarker(map,entryId,item,flyTo){
+  var marker=L.marker([item.lat,item.lng],{icon:makeMarkerIcon(item.cat),draggable:true}).addTo(map);
+  marker.bindPopup(popupHTML(item,entryId,'marker'),{maxWidth:200});
+  marker.on('dragend',function(){var pos=marker.getLatLng();var md=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};md.markers=md.markers.map(function(m){return m.id===item.id?Object.assign({},m,{lat:pos.lat,lng:pos.lng}):m;});ued(entryId,'mapa',Object.assign({},md));});
+  marker._kadaId=item.id;
+  if(flyTo)map.setView([item.lat,item.lng],Math.max(map.getZoom(),14));
+}
+function addMapLine(map,entryId,item,flyTo){var c=mapCatByID(item.cat);var line=L.polyline(item.points,{color:c.color,weight:3}).addTo(map);line.bindPopup(popupHTML(item,entryId,'line'));line._kadaId=item.id;if(flyTo&&item.points.length)map.fitBounds(line.getBounds(),{padding:[20,20]});}
+function addMapPoly(map,entryId,item,flyTo){var c=mapCatByID(item.cat);var poly=L.polygon(item.points,{color:c.color,weight:2,fillOpacity:.2}).addTo(map);poly.bindPopup(popupHTML(item,entryId,'polygon'));poly._kadaId=item.id;if(flyTo&&item.points.length)map.fitBounds(poly.getBounds(),{padding:[20,20]});}
+
+window.removeMapEl=function(entryId,itype,id){
+  var md=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+  var key=itype==='marker'?'markers':itype==='line'?'lines':'polygons';
+  md[key]=(md[key]||[]).filter(function(x){return x.id!==id;});
+  ued(entryId,'mapa',Object.assign({},md));
+  var mapId='aria-map-'+entryId;
+  var map=_mapMaps[mapId];
+  if(map)map.eachLayer(function(l){if(l._kadaId===id)l.remove();});
+  refreshMapList(entryId);
+};
+
+function refreshMapList(entryId){
+  var wrap=document.getElementById('mlist-'+entryId);if(!wrap)return;
+  wrap.innerHTML='';
+  var md=ge(entryId).data.mapa||{markers:[],lines:[],polygons:[]};
+  var all=(md.markers||[]).map(function(x){return Object.assign({},x,{_t:'marker'});})
+    .concat((md.lines||[]).map(function(x){return Object.assign({},x,{_t:'line'});}))
+    .concat((md.polygons||[]).map(function(x){return Object.assign({},x,{_t:'polygon'});}));
+  if(!all.length){wrap.appendChild(mk('div','hint',T.mapHint));return;}
+  var list=mk('div','map-items-list');
+  all.forEach(function(item){
+    var c=mapCatByID(item.cat);
+    var row=mk('div','map-item');
+    var dot=mk('span','map-item-color');dot.style.background=c.color;
+    var info=mk('div','map-item-info');info.appendChild(mk('div','map-item-name',c.icon+' '+item.label));info.appendChild(mk('div','map-item-type',c.label));
+    var del=mk('button','del-btn','✕');del.onclick=function(){window.removeMapEl(entryId,item._t,item.id);};
+    row.appendChild(dot);row.appendChild(info);row.appendChild(del);list.appendChild(row);
+  });
+  wrap.appendChild(list);
+}
+
+/* ═══ FORM BUILDER ═══ */
+function buildForm(id){
+  var e=ge(id);
+  var schema=getSchema(e.type);
+  var form=mk('div','');
+  schema.forEach(function(f){
+    if(f.t==='media'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));
+      var pills=mk('div','pill-row');
+      var pt=mk('button','pill on',T.writeMode);
+      var pa=mk('button','pill',T.audioMode);
+      pills.appendChild(pt);pills.appendChild(pa);w.appendChild(pills);
+      var td=mk('div','');var ta=mk('textarea','finput');ta.rows=3;ta.value=e.data[f.k]||'';ta.oninput=function(){ued(id,f.k,ta.value);};td.appendChild(ta);
+      var ad=mk('div','');ad.style.display='none';ad.appendChild(buildAudioUI(id,f.k));
+      pt.onclick=function(){pt.className='pill on';pa.className='pill';td.style.display='';ad.style.display='none';};
+      pa.onclick=function(){pa.className='pill on';pt.className='pill';ad.style.display='';td.style.display='none';};
+      w.appendChild(td);w.appendChild(ad);form.appendChild(w);
+    } else if(f.t==='evidence'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));w.appendChild(buildEvidenceUI(id));form.appendChild(w);
+    } else if(f.t==='map'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));w.appendChild(buildMapUI(id));form.appendChild(w);
+    } else if(f.t==='qa'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',T.qaLabel));
+      var addRow=mk('div','qa-add');
+      var qi=mk('input','finput');qi.placeholder=T.qaPH;
+      var ab=mk('button','btn btn-amber',T.qaAdd);
+      var doAdd=function(){if(!qi.value.trim())return;addQ(id,qi.value.trim());qi.value='';ql.replaceWith(buildQAlist(id));};
+      ab.onclick=doAdd;qi.onkeydown=function(ev){if(ev.key==='Enter')doAdd();};
+      addRow.appendChild(qi);addRow.appendChild(ab);w.appendChild(addRow);
+      var ql=buildQAlist(id);w.appendChild(ql);form.appendChild(w);
+    } else if(f.t==='select'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));
+      var sel=mk('select','finput');
+      var def=mk('option');def.value='';def.textContent='— — —';sel.appendChild(def);
+      (f.opts||[]).forEach(function(o){var opt=mk('option');opt.value=o;opt.textContent=o;if(e.data[f.k]===o)opt.selected=true;sel.appendChild(opt);});
+      sel.onchange=function(){ued(id,f.k,sel.value);};
+      w.appendChild(sel);form.appendChild(w);
+    } else if(f.t==='textarea'){
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));
+      var ta=mk('textarea','finput');ta.rows=3;ta.value=e.data[f.k]||'';ta.placeholder=f.p||'';ta.oninput=function(){ued(id,f.k,ta.value);};
+      w.appendChild(ta);form.appendChild(w);
+    } else {
+      var w=mk('div','fwrap');w.appendChild(mk('label','flabel',f.l));
+      var inp=mk('input','finput');inp.type=f.t||'text';inp.value=e.data[f.k]||'';inp.placeholder=f.p||'';
+      inp.oninput=function(){ued(id,f.k,inp.value);};
+      w.appendChild(inp);form.appendChild(w);
+    }
+  });
+  return form;
+}
+
+function buildQAlist(id){
+  var e=ge(id);var list=mk('div','qa-list');
+  var qs=e.data.preguntas||[];
+  if(!qs.length){list.appendChild(mk('div','hint',T.qaEmpty));return list;}
+  qs.forEach(function(q,idx){
+    var card=mk('div','qa-card');
+    var hdr=mk('div','qa-hdr');
+    var num=mk('span','qa-num',String(idx+1));
+    var txt=mk('span','qa-txt',q.text);
+    var del=mk('button','del-btn','✕');del.onclick=function(){remQ(id,q.qid);list.replaceWith(buildQAlist(id));};
+    hdr.appendChild(num);hdr.appendChild(txt);hdr.appendChild(del);card.appendChild(hdr);
+
+    var pills=mk('div','pill-row');
+    var pt=mk('button','pill'+(q.modo==='text'?' on':''),T.textAns);
+    var pa=mk('button','pill'+(q.modo==='audio'?' on':''),T.audioAns);
+    pills.appendChild(pt);pills.appendChild(pa);card.appendChild(pills);
+
+    var aw=mk('div','');
+    var td=mk('div','');td.style.display=q.modo==='text'?'':'none';
+    var ta=mk('textarea','finput');ta.rows=3;ta.placeholder=T.qaAnsLabel;ta.value=q.rt||'';ta.oninput=function(){updQ(id,q.qid,{rt:ta.value});};
+    td.appendChild(ta);
+    var ad=mk('div','');ad.style.display=q.modo==='audio'?'':'none';
+    ad.appendChild(buildQAaudio(id,q.qid));
+    pt.onclick=function(){pt.className='pill on';pa.className='pill';td.style.display='';ad.style.display='none';updQ(id,q.qid,{modo:'text'});};
+    pa.onclick=function(){pa.className='pill on';pt.className='pill';ad.style.display='';td.style.display='none';updQ(id,q.qid,{modo:'audio'});};
+    aw.appendChild(td);aw.appendChild(ad);card.appendChild(aw);list.appendChild(card);
+  });
+  return list;
+}
+
+/* ═══ ENTRY CARD ═══ */
+function buildCard(id){
+  var e=ge(id);var d=e.data||{};
+  var isOpen=APP.openCards[id]!==false;
+  var title=e.savedName||[d.lugar,d.tema,d.tipo].filter(Boolean).slice(0,2).join(' · ')||modLabel(e.type)||'—';
+  var sub=[d.fecha,d.hora||d.hora_inicio].filter(Boolean).join(' · ')||new Date(e.createdAt).toLocaleDateString();
+
+  var card=mk('div','ecard');card.id='card-'+id;
+  card.style.borderLeft='4px solid '+modColor(e.type);
+
+  var hdr=mk('div','card-hdr');
+  var left=mk('div','');left.style.cssText='display:flex;align-items:center;gap:8px;flex:1;min-width:0;cursor:pointer';
+  left.appendChild(mk('span','card-icon',modIcon(e.type)));
+  var info=mk('div','card-info');info.appendChild(mk('div','card-title',title));info.appendChild(mk('div','card-sub',sub));
+  left.appendChild(info);left.onclick=function(){toggleCard(id);};
+
+  var right=mk('div','card-right');
+  var badge=mk('span','cbadge',modShort(e.type));badge.style.cssText='background:'+modColor(e.type)+'22;color:'+modColor(e.type);
+  right.appendChild(badge);
+  if(e.savedName){var sb2=mk('span','saved-badge',T.autosaved.replace('✓ ','✓ '));right.appendChild(sb2);}
+
+  var saveBtn=mk('button','btn-save-sm','💾');saveBtn.onclick=function(ev){ev.stopPropagation();openSaveModal(id);};
+  var delBtn=mk('button','btn-del-sm','🗑');
+  delBtn.onclick=function(ev){ev.stopPropagation();confirmModal(T.confirmDel,function(){APP.entries=APP.entries.filter(function(x){return x.id!==id;});renderAll();autoSave();});};
+  var chev=mk('span','chevron',isOpen?'▼':'▶');chev.onclick=function(){toggleCard(id);};
+  right.appendChild(saveBtn);right.appendChild(delBtn);right.appendChild(chev);
+  hdr.appendChild(left);hdr.appendChild(right);
+  card.appendChild(hdr);
+
+  var body=mk('div','card-body');body.style.display=isOpen?'':'none';
+  body.appendChild(buildForm(id));
+  card.appendChild(body);
+  return card;
+}
+
+function toggleCard(id){
+  APP.openCards[id]=!(APP.openCards[id]!==false);
+  var card=document.getElementById('card-'+id);if(!card)return;
+  card.querySelector('.card-body').style.display=APP.openCards[id]?'':'none';
+  card.querySelector('.chevron').textContent=APP.openCards[id]?'▼':'▶';
+}
+
+/* ═══ MODALS ═══ */
+var OV=document.getElementById('overlay');
+function closeModal(){OV.style.display='none';OV.innerHTML='';}
+
+/* Confirmación con modal propio (confirm() nativo falla en muchos navegadores móviles) */
+/* Entrada de texto con modal propio (prompt() nativo falla en muchos navegadores móviles) */
+function promptModal(message,defaultVal,onOk){
+  OV.innerHTML='';
+  var box=mk('div','mbox');box.style.maxWidth='340px';
+  box.appendChild(mk('h2','mtitle',message));
+  var inp=mk('input','finput');inp.type='text';inp.value=defaultVal||'';inp.style.marginTop='12px';
+  box.appendChild(inp);
+  var br=mk('div','mbtn-row');br.style.cssText='display:flex;gap:10px;margin-top:16px';
+  var ok=mk('button','',(T.saveBtn?T.saveBtn.replace('💾 ',''):'OK'));
+  ok.textContent=(T.confirmOk||'Aceptar');
+  ok.style.cssText='flex:1;background:#374151;color:#fff;border:none;border-radius:9px;padding:12px;font-weight:700';
+  var no=mk('button','',(T.cancelBtn||'Cancelar'));no.style.cssText='flex:1;background:#e5e7eb;color:#4b5563;border:none;border-radius:9px;padding:12px;font-weight:700';
+  ok.onclick=function(){var v=inp.value;closeModal();onOk(v);};
+  no.onclick=function(){closeModal();onOk(null);};
+  br.appendChild(no);br.appendChild(ok);box.appendChild(br);
+  OV.appendChild(box);OV.style.display='flex';
+  setTimeout(function(){inp.focus();},100);
+}
+
+function confirmModal(message,onYes){
+  OV.innerHTML='';
+  var box=mk('div','mbox');box.style.maxWidth='340px';
+  box.appendChild(mk('h2','mtitle',message));
+  var br=mk('div','mbtn-row');br.style.cssText='display:flex;gap:10px;margin-top:18px';
+  var yes=mk('button','btn btn-vid',T.saveBtn?'✓ '+ (T.confirmYes||'Sí'):'Sí');yes.style.flex='1';
+  yes.textContent=(T.confirmYes||'Sí, eliminar');
+  yes.style.cssText='flex:1;background:#374151;color:#fff;border:none;border-radius:9px;padding:12px;font-weight:700';
+  var no=mk('button','btn btn-cancel',(T.cancelBtn||'Cancelar'));no.style.cssText='flex:1;background:#e5e7eb;color:#4b5563;border:none;border-radius:9px;padding:12px;font-weight:700';
+  yes.onclick=function(){closeModal();onYes();};
+  no.onclick=function(){closeModal();};
+  br.appendChild(no);br.appendChild(yes);box.appendChild(br);
+  OV.appendChild(box);OV.style.display='flex';
+}
+OV.onclick=function(e){if(e.target===OV)closeModal();};
+
+function openNewModal(){
+  OV.innerHTML='';
+  var box=mk('div','mbox');
+  box.appendChild(mk('div','meyebrow','A.R.I.A'));
+  box.appendChild(mk('h2','mtitle',T.newTitle));
+  box.appendChild(mk('p','msub',T.newSub));
+  var grid=mk('div','mod-grid');
+  MODS.forEach(function(m,i){
+    var lbl=T.mods[i]?T.mods[i].l:m.id;
+    var btn=mk('button','mod-btn');btn.style.borderColor=m.color+'30';
+    btn.innerHTML='<span class="mod-ico">'+m.icon+'</span><span class="mod-lbl">'+lbl+'</span>';
+    btn.onmouseenter=function(){btn.style.borderColor=m.color;btn.style.background=m.color+'15';};
+    btn.onmouseleave=function(){btn.style.borderColor=m.color+'30';btn.style.background='';};
+    btn.onclick=function(){createEntry(m.id);closeModal();};
+    grid.appendChild(btn);
+  });
+  box.appendChild(grid);
+  var cb=mk('button','btn-cancel-w',T.cancelBtn);cb.onclick=closeModal;box.appendChild(cb);
+  OV.appendChild(box);OV.style.display='flex';
+}
+
+function openSaveModal(id){
+  var e=ge(id);var d=e.data||{};
+  var suggested=e.savedName||[d.lugar,d.tema,d.tipo,d.fecha].filter(Boolean).slice(0,2).join(' - ')||modLabel(e.type)||'entry';
+  OV.innerHTML='';
+  var box=mk('div','mbox');box.style.maxWidth='420px';
+  var sh=mk('div','save-hdr');
+  sh.innerHTML='<span style="font-size:26px">'+modIcon(e.type)+'</span><div><div class="meyebrow" style="color:'+modColor(e.type)+'">'+modLabel(e.type).toUpperCase()+'</div><div class="mtitle" style="font-size:17px">'+T.saveTitle+'</div></div>';
+  box.appendChild(sh);
+  box.appendChild(mk('label','flabel',T.saveLabel));
+  var inp=mk('input','finput');inp.type='text';inp.value=suggested;inp.style.marginBottom='6px';box.appendChild(inp);
+  var hint=mk('div','save-hint');
+  var upHint=function(){hint.innerHTML='→ <span style="color:#374151;font-family:monospace">'+(inp.value||'entry').trim()+'.kada</span>';};
+  upHint();inp.oninput=upHint;box.appendChild(hint);
+  var br=mk('div','mbtn-row');
+  var sb=mk('button','btn btn-amber',T.saveBtn);sb.style.flex='1';sb.style.padding='11px';
+  sb.onclick=function(){if(!inp.value.trim())return;APP.entries=APP.entries.map(function(x){return x.id===id?Object.assign({},x,{savedName:inp.value.trim()}):x;});renderAll();autoSave();closeModal();};
+  inp.onkeydown=function(ev){if(ev.key==='Enter')sb.click();};
+  var cb=mk('button','btn btn-cancel',T.cancelBtn);cb.onclick=closeModal;
+  br.appendChild(sb);br.appendChild(cb);box.appendChild(br);
+  OV.appendChild(box);OV.style.display='flex';
+  setTimeout(function(){inp.focus();inp.select();},80);
+}
+
+function openExportModal(){
+  OV.innerHTML='';
+  var box=mk('div','mbox');box.style.maxHeight='90vh';box.style.overflowY='auto';box.style.maxWidth='500px';
+  box.appendChild(mk('div','meyebrow','A.R.I.A'));
+  box.appendChild(mk('h2','mtitle',T.exportTitle));
+  box.appendChild(mk('p','msub',T.exportSub));
+  box.appendChild(mk('label','flabel',T.exportProjLabel));
+  var pi=mk('input','finput');pi.value='aria_'+new Date().toISOString().slice(0,10);pi.style.marginBottom='14px';box.appendChild(pi);
+  var selIds=new Set(APP.entries.map(function(e){return e.id;}));
+  var countEl=mk('span','exp-count',T.exportCount(selIds.size,APP.entries.length));
+  var taBtn=mk('button','pill',T.exportDeselectAll);taBtn.style.fontSize='11px';
+  var tr=mk('div','exp-toprow');tr.appendChild(countEl);tr.appendChild(taBtn);box.appendChild(tr);
+  var list=mk('div','exp-list');
+  var upCount=function(){countEl.textContent=T.exportCount(selIds.size,APP.entries.length);taBtn.textContent=selIds.size===APP.entries.length?T.exportDeselectAll:T.exportSelectAll;};
+  taBtn.onclick=function(){if(selIds.size===APP.entries.length){selIds.clear();list.querySelectorAll('.exp-check').forEach(function(c){c.checked=false;});}else{APP.entries.forEach(function(e){selIds.add(e.id);});list.querySelectorAll('.exp-check').forEach(function(c){c.checked=true;});}upCount();};
+  if(!APP.entries.length)list.appendChild(mk('div','hint',T.noResults));
+  APP.entries.forEach(function(e){
+    var d=e.data||{};
+    var title=e.savedName||[d.lugar,d.tema,d.tipo].filter(Boolean).slice(0,2).join(' · ')||modLabel(e.type)||'—';
+    var sub=[d.fecha,d.hora||d.hora_inicio].filter(Boolean).join(' · ');
+    var row=mk('div','exp-row');row.style.borderColor=selIds.has(e.id)?modColor(e.type)+'60':'#d1d5db';
+    var chk=mk('input','exp-check');chk.type='checkbox';chk.checked=selIds.has(e.id);
+    chk.onchange=function(){chk.checked?selIds.add(e.id):selIds.delete(e.id);row.style.borderColor=chk.checked?modColor(e.type)+'60':'#d1d5db';upCount();};
+    var info=mk('div','exp-info');info.appendChild(mk('div','exp-title',modIcon(e.type)+' '+title));info.appendChild(mk('div','exp-sub',modShort(e.type)+(sub?' · '+sub:'')));
+    row.appendChild(chk);row.appendChild(info);
+    if(e.savedName)row.appendChild(mk('span','saved-badge','✓'));
+    list.appendChild(row);
+  });
+  box.appendChild(list);
+  var br=mk('div','mbtn-row');
+  var eb=mk('button','btn btn-amber',T.exportBtn(APP.entries.length));eb.style.flex='1';eb.style.padding='12px';
+  eb.onclick=function(){
+    var toExp=APP.entries.filter(function(e){return selIds.has(e.id);});
+    if(!toExp.length){alert(T.noResults);return;}
+    eb.textContent='⏳...';eb.disabled=true;
+    // ═══ FORMATO PROPIO KADA v1 ═══
+    // Estructura con identidad de marca: cabecera mágica + metadatos + datos.
+    var now=new Date();
+    var body={
+      generator:'KADA Format',
+      spec:'https://kada.format',
+      app:'A.R.I.A — Application for Research Information Acquisition',
+      author:'A.R.I.A',
+      formatName:'KADA',
+      formatVersion:'1.0',
+      createdAt:now.toISOString(),
+      projectName:pi.value.trim()||'kada',
+      totalEntries:toExp.length,
+      entries:toExp
+    };
+    // Checksum simple (huella de integridad) sobre las entradas
+    var entriesStr=JSON.stringify(toExp);
+    var sum=0; for(var ci=0;ci<entriesStr.length;ci++){sum=(sum*31+entriesStr.charCodeAt(ci))>>>0;}
+    body.checksum=('00000000'+sum.toString(16)).slice(-8);
+    // Cabecera mágica de identidad KADA (primeras líneas del archivo — sello inconfundible)
+    var MAGIC='§KADA§';
+    var header=[
+      MAGIC+' 1.0',
+      '# KADA — Kit for Applied Data Acquisition',
+      '# Formato propio de A.R.I.A · https://kada.format',
+      '# Generado: '+now.toISOString(),
+      '# Integridad: '+body.checksum,
+      '#---'
+    ].join('\n');
+    var json=header+'\n'+JSON.stringify(body,null,2);
+    var sizeMB=(new Blob([json]).size/1024/1024).toFixed(1);
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([json],{type:'application/x-kada'}));
+    a.download=(pi.value.trim()||'kada')+'.kada';
+    a.click();
+    closeModal();
+    setTimeout(function(){alert('✅ '+sizeMB+' MB — '+T.importOk(toExp.length));},300);
+  };
+  var cb=mk('button','btn btn-cancel',T.cancelBtn);cb.onclick=closeModal;
+  br.appendChild(eb);br.appendChild(cb);box.appendChild(br);
+  OV.appendChild(box);OV.style.display='flex';
+}
+
+/* ═══ IMPORT ═══ */
+function importAria(file){
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var raw=e.target.result;
+      var p=parseKADA(raw);
+      if(!p){alert(T.importErr);return;}
+      var merged=(p.entries||[]).map(function(en){return Object.assign({},en,{id:Date.now()+Math.random(),createdAt:en.createdAt||new Date().toISOString()});});
+      APP.entries=merged.concat(APP.entries);
+      renderAll();autoSave();
+      alert(T.importOk(merged.length));
+    }catch(err){alert(T.importErr+' '+err.message);}
+  };
+  r.readAsText(file);
+}
+
+/* ═══ PARSER PROPIO DEL FORMATO KADA ═══
+   Reconoce el formato KADA (con cabecera mágica §KADA§) y también
+   acepta archivos JSON planos antiguos (.aria/.kada v2) por compatibilidad. */
+function parseKADA(raw){
+  if(typeof raw!=='string')return null;
+  var text=raw.replace(/^\uFEFF/,'').trim(); // quitar BOM si existe
+
+  // Caso 1: FORMATO KADA PROPIO — empieza con la firma mágica §KADA§
+  if(text.indexOf('§KADA§')===0){
+    // Separar cabecera (líneas que empiezan con # o §) del cuerpo JSON
+    var idx=text.indexOf('#---');
+    var jsonPart = idx>-1 ? text.slice(idx+4) : text.slice(text.indexOf('\n'));
+    var body;
+    try{ body=JSON.parse(jsonPart.trim()); }
+    catch(e){ return null; }
+    if(body.formatName!=='KADA') return null;
+    // Verificar integridad (checksum) si viene incluido
+    if(body.checksum && body.entries){
+      var es=JSON.stringify(body.entries);
+      var sum=0; for(var i=0;i<es.length;i++){sum=(sum*31+es.charCodeAt(i))>>>0;}
+      var calc=('00000000'+sum.toString(16)).slice(-8);
+      if(calc!==body.checksum){
+        // Archivo alterado: avisar pero permitir continuar
+        console.warn('KADA: checksum no coincide (archivo modificado tras exportar)');
+      }
+    }
+    return body;
+  }
+
+  // Caso 2: COMPATIBILIDAD — JSON plano antiguo con campo "format"
+  try{
+    var p=JSON.parse(text);
+    if(p.format==='kada'||p.format==='aria') return p;
+  }catch(e){}
+
+  return null; // no es un KADA reconocible
+}
+
+/* ═══ AUTOSAVE ═══ */
+var STORAGE_KEY='aria_data_v2';
+var _saveTimer=null;
+function autoSave(){
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(function(){
+    try{
+      localStorage.setItem(STORAGE_KEY,JSON.stringify({entries:APP.entries,openCards:APP.openCards,savedAt:new Date().toISOString()}));
+      var dot=document.getElementById('autosave-dot');
+      if(dot){dot.textContent=T.autosaved;dot.style.display='block';dot.style.opacity='1';setTimeout(function(){dot.style.opacity='0';setTimeout(function(){dot.style.display='none';},400);},1800);}
+    }catch(e){console.warn('Save failed',e.message);}
+  },1200);
+}
+function loadSaved(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+    var saved=JSON.parse(raw);
+    if(saved.entries&&saved.entries.length){APP.entries=saved.entries;APP.openCards=saved.openCards||{};return true;}
+  }catch(e){console.warn('Load failed',e);}
+  return false;
+}
+
+/* ═══ CREATE / RENDER ═══ */
+function createEntry(type){
+  var entry={id:Date.now(),type:type,data:{},createdAt:new Date().toISOString(),savedName:null};
+  APP.entries.unshift(entry);APP.openCards[entry.id]=true;
+  renderAll();autoSave();
+}
+
+function renderAll(){
+  var cont=document.getElementById('entries');if(!cont)return;
+  cont.innerHTML='';
+  var st=document.getElementById('st-total');if(st)st.textContent=APP.entries.length;
+  var ss=document.getElementById('st-saved');if(ss)ss.textContent=APP.entries.filter(function(e){return e.savedName;}).length;
+  MODS.forEach(function(m){var el=document.getElementById('st-'+m.id);if(el)el.textContent=APP.entries.filter(function(e){return e.type===m.id;}).length;});
+
+  var filtered=APP.entries.filter(function(e){
+    var mt=!APP.filterType||e.type===APP.filterType;
+    var ms=!APP.search||JSON.stringify(e.data).toLowerCase().includes(APP.search)||(e.savedName||'').toLowerCase().includes(APP.search);
+    return mt&&ms;
+  });
+
+  if(!APP.entries.length){
+    cont.innerHTML='<div class="empty"><div class="ei">📱</div><div class="et">'+T.emptyTitle+'</div><div class="es">'+T.emptySub+'</div><div class="empty-btns"><button class="btn btn-amber" id="emptyNew">'+T.emptyNew+'</button><button class="btn btn-green2" id="emptyOpen">'+T.emptyOpen+'</button></div></div>';
+    var en=document.getElementById('emptyNew');if(en)en.onclick=openNewModal;
+    var eo=document.getElementById('emptyOpen');if(eo)eo.onclick=function(){document.getElementById('importFile').click();};
+    return;
+  }
+  if(!filtered.length){cont.innerHTML='<div class="no-results">'+T.noResults+'</div>';return;}
+  filtered.forEach(function(e){cont.appendChild(buildCard(e.id));});
+}
+
+/* ═══ INIT ═══ */
+function initApp(){
+  // Check saved language
+  var savedLang=localStorage.getItem('aria_lang');
+
+  if(savedLang&&LANGS[savedLang]){
+    // Skip language screen — go straight to app
+    T=LANGS[savedLang];
+    document.documentElement.lang=savedLang;
+    document.getElementById('app').style.display='';
+    updateStaticUI();
+    var restored=loadSaved();
+    renderAll();
+    if(restored){var dot=document.getElementById('autosave-dot');if(dot){dot.textContent=T.sessionRestored;dot.style.display='block';dot.style.opacity='1';setTimeout(function(){dot.style.opacity='0';setTimeout(function(){dot.style.display='none';dot.textContent=T.autosaved;},400);},2500);}}
+    // Idioma ya elegido: activar descarga automática de mapas (sin popup si ya se vio)
+    setTimeout(function(){ if(localStorage.getItem('aria_map_popup_seen')==='1'){armMapAutoDownload();} else {showMapInfoPopup();} },600);
+  } else {
+    // Show language screen (app stays hidden)
+    showLangScreen();
+    loadSaved(); // preload data, will render after lang chosen
+  }
+
+  // Wire buttons
+  document.getElementById('btnNew').onclick=openNewModal;
+  document.getElementById('btnExport').onclick=openExportModal;
+  document.getElementById('btnImport').onclick=function(){document.getElementById('importFile').click();};
+  document.getElementById('btnLang').onclick=function(){showLangScreen();};
+  document.getElementById('importFile').onchange=function(e){if(e.target.files[0])importAria(e.target.files[0]);e.target.value='';};
+  document.getElementById('search').oninput=function(e){APP.search=e.target.value.toLowerCase();renderAll();};
+  document.getElementById('btn-dismiss').onclick=function(){document.getElementById('install-banner').style.display='none';};
+
+  // PWA install (universal: Android/PC/iOS)
+  var deferred=null;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;document.getElementById('install-banner').style.display='flex';});
+  document.getElementById('btn-install').onclick=function(){triggerInstall();};
+  window.addEventListener('appinstalled',function(){document.getElementById('install-banner').style.display='none';deferred=null;});
+
+  // Botón permanente del header
+  var hdrInstall=document.getElementById('btnInstallHdr');
+  if(hdrInstall){
+    // Ocultar si la app ya corre instalada (standalone)
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+    if(standalone){hdrInstall.style.display='none';}
+    hdrInstall.onclick=function(){triggerInstall();};
+  }
+
+  function triggerInstall(){
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+    if(standalone){alert(T.installedMsg||'✓ Installed');return;}
+    if(deferred){
+      // Android / Chrome / Edge / PC — instalador nativo disponible
+      deferred.prompt();
+      deferred.userChoice.then(function(){deferred=null;var b=document.getElementById('install-banner');if(b)b.style.display='none';});
+      return;
+    }
+    // No hay prompt nativo disponible. Detectar la razón y guiar según plataforma.
+    var isFile = location.protocol==='file:';
+    if(isIOS){
+      alert(T.iosInstallMsg||'Use Share → Add to Home Screen');
+    } else if(isFile){
+      // Servido como archivo local: los navegadores NO permiten instalar PWA desde file://
+      alert(T.installFileMsg||'To install, this app must be opened from a web address (https://), not as a local file.');
+    } else {
+      // Android/PC servido por http(s) pero el prompt aún no llegó o ya se usó
+      alert(T.installMenuMsg||'Open your browser menu (⋮) and choose "Install app" or "Add to Home Screen".');
+    }
+  }
+}
+
+// Init on DOMContentLoaded or immediately if already loaded
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',initApp);
+}else{
+  initApp();
+}
+
+
+</script>
+</body>
+</html>
