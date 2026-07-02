@@ -1,0 +1,16 @@
+{
+  "name": "aria",
+  "version": "1.0.0",
+  "description": "A.R.I.A - Application for Research Information Acquisition",
+  "private": true,
+  "scripts": {
+    "sync": "cap sync",
+    "open": "cap open android",
+    "build:apk": "cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "appId": "edu.sena.aria",
+  "appName": "A.R.I.A",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
