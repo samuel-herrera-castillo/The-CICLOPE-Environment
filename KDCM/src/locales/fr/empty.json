@@ -1,0 +1,50 @@
+{
+  "no_documents": {
+    "title": "Aucun document",
+    "subtitle": "Importez votre premier fichier pour commencer"
+  },
+  "no_codes": {
+    "title": "Aucune catégorie",
+    "subtitle": "Cliquez sur + pour créer votre première catégorie"
+  },
+  "no_results": {
+    "title": "Aucun résultat",
+    "subtitle": "Aucun élément trouvé pour \"{{term}}\""
+  },
+  "no_visualization": {
+    "title": "Aucune donnée à visualiser",
+    "subtitle": "Importez des documents et créez des catégories pour voir des graphiques"
+  },
+  "no_selection": {
+    "title": "Sélectionnez un élément",
+    "subtitle": "Cliquez sur un élément pour voir ses détails"
+  },
+  "no_maps": {
+    "title": "Aucune carte",
+    "subtitle": "Créez votre première carte conceptuelle"
+  },
+  "no_networks": {
+    "title": "Aucun réseau",
+    "subtitle": "Créez votre premier réseau conceptuel"
+  },
+  "no_memos": {
+    "title": "Aucun mémo",
+    "subtitle": "Écrivez votre premier mémo de recherche"
+  },
+  "no_segments": {
+    "title": "Aucun segment codé",
+    "subtitle": "Sélectionnez du texte dans un document pour le coder"
+  },
+  "no_session": {
+    "title": "Aucune session collaborative",
+    "subtitle": "Démarrez une session pour travailler avec votre équipe"
+  },
+  "select_tool": {
+    "title": "Sélectionnez un outil",
+    "subtitle": "Choisissez un outil d'analyse pour commencer"
+  },
+  "select_chart": {
+    "title": "Sélectionnez un graphique",
+    "subtitle": "Choisissez un type de graphique pour visualiser vos données"
+  }
+}

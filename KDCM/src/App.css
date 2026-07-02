@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 theme: #F1D7FF palette ── */
+@theme {
+  --color-peach-50: rgba(241, 215, 255, 0.5);
+  --color-peach-100: rgba(241, 215, 255, 0.5);
+  --color-peach-200: rgba(241, 215, 255, 0.6);
+  --color-peach-300: rgba(241, 215, 255, 0.7);
+  --color-peach-400: rgba(241, 215, 255, 0.8);
+  --color-peach-500: #F1D7FF;
+  --color-peach-600: #E1C7EF;
+  --color-peach-700: #C4A0D4;
+  --color-peach-800: #A078B8;
+  --color-peach-900: #6B5090;
+}
+
+/* ── Dark mode: driven by data-theme attribute ── */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ── Prevent text selection in drag region ── */
+[data-tauri-drag-region] {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── Pulse animation for loading logo ── */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-logo {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Logo hover transition ── */
+.logo-hover {
+  transition: transform var(--t-fast, 150ms ease-out);
+}
+
+.logo-hover:hover {
+  transform: scale(1.08);
+}

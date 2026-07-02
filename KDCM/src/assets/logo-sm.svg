@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <radialGradient id="pb" cx="38%" cy="35%" r="62%" fx="33%" fy="30%">
+      <stop offset="0%" stop-color="#FFCC80"/>
+      <stop offset="40%" stop-color="#FFAB73"/>
+      <stop offset="100%" stop-color="#E64A19"/>
+    </radialGradient>
+    <linearGradient id="pl" x1="0%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#A5D6A7"/>
+      <stop offset="50%" stop-color="#66BB6A"/>
+      <stop offset="100%" stop-color="#2E7D32"/>
+    </linearGradient>
+    <clipPath id="bc">
+      <path d="M16 5 C9 5,4 10.5,4 17.5 C4 24.5,9 29.5,16 29.5 C23 29.5,28 24.5,28 17.5 C28 10.5,23 5,16 5 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="16" cy="30.5" rx="5" ry="0.8" fill="#000" opacity="0.14"/>
+
+  <!-- Body -->
+  <path d="M16 5 C9 5,4 10.5,4 17.5 C4 24.5,9 29.5,16 29.5 C23 29.5,28 24.5,28 17.5 C28 10.5,23 5,16 5 Z"
+    fill="url(#pb)"/>
+
+  <!-- Shine -->
+  <ellipse cx="10" cy="10.5" rx="3" ry="5.5"
+    transform="rotate(-32 10 10.5)"
+    fill="#FFF" opacity="0.35" clip-path="url(#bc)"/>
+
+  <!-- Cleft -->
+  <path d="M15.7 5.2 Q15.4 12,15.7 21"
+    stroke="#BF360C" stroke-width="0.7" fill="none"
+    stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Stem -->
+  <path d="M16 5 Q15.4 3.8,14.4 2.8"
+    stroke="#4E342E" stroke-width="0.6" fill="none"
+    stroke-linecap="round"/>
+
+  <!-- Leaf -->
+  <g transform="rotate(32 14.6 5)">
+    <path d="M14.6 5 C12 3.2,9 1.6,7 1.6 C6 1.6,5.8 2.8,7 3.4 C8.6 4,12 4.6,14.6 5 Z"
+      fill="url(#pl)"/>
+  </g>
+</svg>

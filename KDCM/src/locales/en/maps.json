@@ -1,0 +1,51 @@
+{
+  "hub_title": "Maps",
+  "concept_maps": "Concept maps",
+  "geo_docs": "Geographic documents",
+  "new_map": "+ New map",
+  "new_geo_doc": "+ New geo doc",
+  "map_types": {
+    "causal": "Causal",
+    "arguments": "Arguments",
+    "cases": "Cases",
+    "process": "Process",
+    "blank": "Blank"
+  },
+  "no_maps": "No concept maps",
+  "no_geo_docs": "No geographic documents",
+  "n_nodes": "{{count}} nodes",
+  "n_markers": "{{count}} markers",
+  "back_to_hub": "Back to hub",
+  "concept_map": "Concept map",
+  "save_map": "Save",
+  "present": "Present",
+  "layers": "Layers",
+  "new_layer": "New layer",
+  "gis": {
+    "streets": "Streets",
+    "satellite": "Satellite",
+    "relief": "Relief",
+    "none": "No basemap",
+    "new_marker": "New marker",
+    "new_region": "New region",
+    "new_line": "New line",
+    "measure": "Measure distance",
+    "search_address": "Search address...",
+    "go": "Go",
+    "categories": "GIS CATEGORIES",
+    "elements": "ELEMENTS",
+    "no_markers": "No markers yet",
+    "add_marker_hint": "Use the marker tool to add points",
+    "new_category": "+ New GIS category",
+    "inspector": {
+      "name": "Name",
+      "lat": "Latitude",
+      "lng": "Longitude",
+      "description": "Description",
+      "gis_category": "GIS category",
+      "kdcm_categories": "KDCM categories",
+      "open_maps": "View in Google Maps",
+      "delete_marker": "Delete marker"
+    }
+  }
+}

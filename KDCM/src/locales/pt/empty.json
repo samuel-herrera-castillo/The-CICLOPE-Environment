@@ -1,0 +1,50 @@
+{
+  "no_documents": {
+    "title": "Sem documentos",
+    "subtitle": "Importe seu primeiro arquivo para começar"
+  },
+  "no_codes": {
+    "title": "Sem categorias",
+    "subtitle": "Clique em + para criar sua primeira categoria"
+  },
+  "no_results": {
+    "title": "Sem resultados",
+    "subtitle": "Nenhum item encontrado para \"{{term}}\""
+  },
+  "no_visualization": {
+    "title": "Sem dados para visualizar",
+    "subtitle": "Importe documentos e crie categorias para ver gráficos"
+  },
+  "no_selection": {
+    "title": "Selecione um item",
+    "subtitle": "Clique em um item para ver seus detalhes"
+  },
+  "no_maps": {
+    "title": "Sem mapas",
+    "subtitle": "Crie seu primeiro mapa conceitual"
+  },
+  "no_networks": {
+    "title": "Sem redes",
+    "subtitle": "Crie sua primeira rede conceitual"
+  },
+  "no_memos": {
+    "title": "Sem memos",
+    "subtitle": "Escreva seu primeiro memo de pesquisa"
+  },
+  "no_segments": {
+    "title": "Sem segmentos codificados",
+    "subtitle": "Selecione texto em um documento para codificar"
+  },
+  "no_session": {
+    "title": "Sem sessão colaborativa",
+    "subtitle": "Inicie uma sessão para trabalhar com sua equipe"
+  },
+  "select_tool": {
+    "title": "Selecione uma ferramenta",
+    "subtitle": "Escolha uma ferramenta de análise para começar"
+  },
+  "select_chart": {
+    "title": "Selecione um gráfico",
+    "subtitle": "Escolha um tipo de gráfico para visualizar seus dados"
+  }
+}

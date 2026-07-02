@@ -1,0 +1,51 @@
+{
+  "hub_title": "Cartes",
+  "concept_maps": "Cartes conceptuelles",
+  "geo_docs": "Documents géographiques",
+  "new_map": "+ Nouvelle carte",
+  "new_geo_doc": "+ Nouveau doc. géo",
+  "map_types": {
+    "causal": "Causal",
+    "arguments": "Arguments",
+    "cases": "Cas",
+    "process": "Processus",
+    "blank": "Vide"
+  },
+  "no_maps": "Aucune carte conceptuelle",
+  "no_geo_docs": "Aucun document géographique",
+  "n_nodes": "{{count}} nœuds",
+  "n_markers": "{{count}} marqueurs",
+  "back_to_hub": "Retour au hub",
+  "concept_map": "Carte conceptuelle",
+  "save_map": "Enregistrer",
+  "present": "Présenter",
+  "layers": "Calques",
+  "new_layer": "Nouveau calque",
+  "gis": {
+    "streets": "Rues",
+    "satellite": "Satellite",
+    "relief": "Relief",
+    "none": "Sans fond",
+    "new_marker": "Nouveau marqueur",
+    "new_region": "Nouvelle région",
+    "new_line": "Nouvelle ligne",
+    "measure": "Mesurer distance",
+    "search_address": "Rechercher adresse...",
+    "go": "Aller",
+    "categories": "CATÉGORIES GIS",
+    "elements": "ÉLÉMENTS",
+    "no_markers": "Aucun marqueur",
+    "add_marker_hint": "Utilisez l'outil marqueur pour ajouter des points",
+    "new_category": "+ Nouvelle catégorie GIS",
+    "inspector": {
+      "name": "Nom",
+      "lat": "Latitude",
+      "lng": "Longitude",
+      "description": "Description",
+      "gis_category": "Catégorie GIS",
+      "kdcm_categories": "Catégories KDCM",
+      "open_maps": "Voir dans Google Maps",
+      "delete_marker": "Supprimer le marqueur"
+    }
+  }
+}

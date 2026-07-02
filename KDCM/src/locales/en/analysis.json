@@ -1,0 +1,88 @@
+{
+  "hub_title": "Analysis tools",
+  "tools": {
+    "lexical": {
+      "name": "Lexical search",
+      "description": "Frequency, KWIC, n-grams"
+    },
+    "query": {
+      "name": "Query builder",
+      "description": "Compound AND/OR/NOT filters"
+    },
+    "distribution": {
+      "name": "Distribution table",
+      "description": "Code × document matrix"
+    },
+    "cooccurrence": {
+      "name": "Co-occurrences",
+      "description": "Code proximity analysis"
+    },
+    "concordance": {
+      "name": "Concordance",
+      "description": "Aligned citation view"
+    },
+    "autocoding": {
+      "name": "Auto-coding",
+      "description": "Mass coding by rules"
+    },
+    "sentiment": {
+      "name": "Opinion mining",
+      "description": "Polarity detection"
+    },
+    "citation_reader": {
+      "name": "Citation reader",
+      "description": "Sequential citation browser"
+    },
+    "split": {
+      "name": "Split category",
+      "description": "Divide a code into subcodes"
+    },
+    "redundancies": {
+      "name": "Redundancies",
+      "description": "Near-duplicate citation finder"
+    },
+    "extractor": {
+      "name": "Data extractor",
+      "description": "Variable matrix export"
+    },
+    "literature": {
+      "name": "Literature review",
+      "description": "Memo-based synthesis"
+    },
+    "links": {
+      "name": "Links",
+      "description": "Segment link management"
+    }
+  },
+  "select_tool": "Select a tool to see results",
+  "no_data_for_tool": "Not enough data for this tool.",
+  "lexical": {
+    "search_placeholder": "Search term...",
+    "regex": "Regex",
+    "fuzzy": "Fuzzy",
+    "case_sensitive": "Case sensitive",
+    "whole_word": "Whole word",
+    "all_categories": "All categories",
+    "all_docs": "All documents",
+    "all_researchers": "All researchers",
+    "word": "Word",
+    "frequency": "Frequency",
+    "n_docs": "Documents",
+    "n_segments": "Segments",
+    "distribution": "Distribution",
+    "kwic_context": "KWIC Context"
+  },
+  "concordance": {
+    "researcher_a": "Researcher A",
+    "researcher_b": "Researcher B",
+    "method": "Method",
+    "kappa": "Cohen's Kappa",
+    "alpha": "Krippendorff's Alpha",
+    "simple": "% Simple agreement",
+    "perfect": "Almost perfect agreement",
+    "substantial": "Substantial agreement",
+    "moderate": "Moderate agreement",
+    "weak": "Weak agreement",
+    "calibration": "Calibration exercise"
+  }
+}

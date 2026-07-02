@@ -1,0 +1,50 @@
+{
+  "no_documents": {
+    "title": "No documents",
+    "subtitle": "Import your first file to get started"
+  },
+  "no_codes": {
+    "title": "No categories",
+    "subtitle": "Click + to create your first category"
+  },
+  "no_results": {
+    "title": "No results",
+    "subtitle": "No items found for \"{{term}}\""
+  },
+  "no_visualization": {
+    "title": "No data to visualize",
+    "subtitle": "Import documents and create categories to see charts"
+  },
+  "no_selection": {
+    "title": "Select an item",
+    "subtitle": "Click an item to view its details"
+  },
+  "no_maps": {
+    "title": "No maps",
+    "subtitle": "Create your first concept map"
+  },
+  "no_networks": {
+    "title": "No networks",
+    "subtitle": "Create your first concept network"
+  },
+  "no_memos": {
+    "title": "No memos",
+    "subtitle": "Write your first research memo"
+  },
+  "no_segments": {
+    "title": "No coded segments",
+    "subtitle": "Select text in a document to code it"
+  },
+  "no_session": {
+    "title": "No collaborative session",
+    "subtitle": "Start a session to work with your team"
+  },
+  "select_tool": {
+    "title": "Select a tool",
+    "subtitle": "Choose an analysis tool to get started"
+  },
+  "select_chart": {
+    "title": "Select a chart",
+    "subtitle": "Choose a chart type to visualize your data"
+  }
+}

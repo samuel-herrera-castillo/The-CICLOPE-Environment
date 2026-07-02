@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Radial gradient for body volume: center light → edge dark -->
+    <radialGradient id="peachBody" cx="38%" cy="35%" r="62%" fx="33%" fy="30%">
+      <stop offset="0%" stop-color="#FFCC80"/>
+      <stop offset="40%" stop-color="#FFAB73"/>
+      <stop offset="70%" stop-color="#FF7043"/>
+      <stop offset="100%" stop-color="#E64A19"/>
+    </radialGradient>
+
+    <!-- Linear gradient for leaf -->
+    <linearGradient id="peachLeaf" x1="0%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#A5D6A7"/>
+      <stop offset="50%" stop-color="#66BB6A"/>
+      <stop offset="100%" stop-color="#2E7D32"/>
+    </linearGradient>
+
+    <!-- Body clip path for shine highlight -->
+    <clipPath id="bodyClip">
+      <path d="M256 80 C140 82,65 170,65 285 C65 395,148 472,256 472 C364 472,447 395,447 285 C447 170,372 82,256 80 Z"/>
+    </clipPath>
+
+    <!-- Subtle inner shadow gradient -->
+    <radialGradient id="peachShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="transparent" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#BF360C" stop-opacity="0.25"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Ground shadow -->
+  <ellipse cx="256" cy="484" rx="82" ry="12" fill="#000" opacity="0.13"/>
+
+  <!-- Main body -->
+  <path id="peach-body"
+    d="M256 80 C140 82,65 170,65 285 C65 395,148 472,256 472 C364 472,447 395,447 285 C447 170,372 82,256 80 Z"
+    fill="url(#peachBody)"/>
+
+  <!-- Inner edge shadow for depth -->
+  <path
+    d="M256 80 C140 82,65 170,65 285 C65 395,148 472,256 472 C364 472,447 395,447 285 C447 170,372 82,256 80 Z"
+    fill="url(#peachShadow)"/>
+
+  <!-- Shine highlight: white ellipse top-left, 35% opacity -->
+  <ellipse cx="160" cy="165" rx="48" ry="82"
+    transform="rotate(-32 160 165)"
+    fill="#FFF" opacity="0.35"
+    clip-path="url(#bodyClip)"/>
+
+  <!-- Secondary small highlight -->
+  <ellipse cx="135" cy="135" rx="20" ry="32"
+    transform="rotate(-35 135 135)"
+    fill="#FFF" opacity="0.22"
+    clip-path="url(#bodyClip)"/>
+
+  <!-- Cleft / crease: 3px bezier curve from top down to ~65% of body -->
+  <path d="M254 82 Q250 190,253 335"
+    stroke="#BF360C" stroke-width="3" fill="none"
+    stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Subtle cleft shadow (softer, wider, offset) -->
+  <path d="M254 82 Q249 190,252 335"
+    stroke="#A8300A" stroke-width="1.2" fill="none"
+    stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Stem: curved line from cleft top, round linecap -->
+  <path d="M256 82 Q247 63,232 48"
+    stroke="#4E342E" stroke-width="2.8" fill="none"
+    stroke-linecap="round"/>
+
+  <!-- Leaf: elongated teardrop rotated ~32° -->
+  <g transform="rotate(32 238 82)">
+    <!-- Leaf body -->
+    <path d="M238 82 C193 50,143 22,108 21 C90 21,87 42,107 52 C137 65,193 76,238 82 Z"
+      fill="url(#peachLeaf)"/>
+    <!-- Leaf vein: 1px dark green center line -->
+    <path d="M232 77 C188 50,143 30,105 33"
+      stroke="#1B5E20" stroke-width="1.2" fill="none"
+      stroke-linecap="round" opacity="0.6"/>
+  </g>
+</svg>

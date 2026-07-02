@@ -1,0 +1,88 @@
+{
+  "hub_title": "Herramientas de análisis",
+  "tools": {
+    "lexical": {
+      "name": "Búsqueda léxica",
+      "description": "Frecuencia, KWIC, n-gramas"
+    },
+    "query": {
+      "name": "Constructor de consultas",
+      "description": "Filtros compuestos AND/OR/NOT"
+    },
+    "distribution": {
+      "name": "Tabla de distribución",
+      "description": "Matriz código × documento"
+    },
+    "cooccurrence": {
+      "name": "Co-ocurrencias",
+      "description": "Análisis de proximidad de códigos"
+    },
+    "concordance": {
+      "name": "Concordancia",
+      "description": "Vista de citas alineadas"
+    },
+    "autocoding": {
+      "name": "Autocodificación",
+      "description": "Codificación masiva por reglas"
+    },
+    "sentiment": {
+      "name": "Minería de opiniones",
+      "description": "Detección de polaridad"
+    },
+    "citation_reader": {
+      "name": "Lector de citas",
+      "description": "Navegador secuencial de citas"
+    },
+    "split": {
+      "name": "Dividir categoría",
+      "description": "Divide un código en subcódigos"
+    },
+    "redundancies": {
+      "name": "Redundancias",
+      "description": "Buscador de citas casi duplicadas"
+    },
+    "extractor": {
+      "name": "Extractor de datos",
+      "description": "Exportación de matriz de variables"
+    },
+    "literature": {
+      "name": "Revisión de literatura",
+      "description": "Síntesis basada en memos"
+    },
+    "links": {
+      "name": "Vínculos",
+      "description": "Administración de vínculos entre segmentos"
+    }
+  },
+  "select_tool": "Selecciona una herramienta para ver los resultados",
+  "no_data_for_tool": "No hay datos suficientes para esta herramienta.",
+  "lexical": {
+    "search_placeholder": "Buscar término...",
+    "regex": "Regex",
+    "fuzzy": "Aproximada",
+    "case_sensitive": "Mayúsculas",
+    "whole_word": "Palabra completa",
+    "all_categories": "Todas las categorías",
+    "all_docs": "Todos los documentos",
+    "all_researchers": "Todos los investigadores",
+    "word": "Palabra",
+    "frequency": "Frecuencia",
+    "n_docs": "Documentos",
+    "n_segments": "Segmentos",
+    "distribution": "Distribución",
+    "kwic_context": "Contexto KWIC"
+  },
+  "concordance": {
+    "researcher_a": "Investigador A",
+    "researcher_b": "Investigador B",
+    "method": "Método",
+    "kappa": "Kappa Cohen",
+    "alpha": "Alfa Krippendorff",
+    "simple": "% Acuerdo simple",
+    "perfect": "Concordancia casi perfecta",
+    "substantial": "Concordancia sustancial",
+    "moderate": "Concordancia moderada",
+    "weak": "Concordancia débil",
+    "calibration": "Ejercicio de calibración"
+  }
+}

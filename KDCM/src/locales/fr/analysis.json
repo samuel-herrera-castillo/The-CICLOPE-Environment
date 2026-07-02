@@ -1,0 +1,88 @@
+{
+  "hub_title": "Outils d'analyse",
+  "tools": {
+    "lexical": {
+      "name": "Recherche lexicale",
+      "description": "Fréquence, KWIC, n-grammes"
+    },
+    "query": {
+      "name": "Constructeur de requêtes",
+      "description": "Filtres composés AND/OR/NOT"
+    },
+    "distribution": {
+      "name": "Tableau de distribution",
+      "description": "Matrice code × document"
+    },
+    "cooccurrence": {
+      "name": "Co-occurrences",
+      "description": "Analyse de proximité des codes"
+    },
+    "concordance": {
+      "name": "Concordance",
+      "description": "Vue des citations alignées"
+    },
+    "autocoding": {
+      "name": "Auto-codage",
+      "description": "Codage massif par règles"
+    },
+    "sentiment": {
+      "name": "Analyse d'opinions",
+      "description": "Détection de polarité"
+    },
+    "citation_reader": {
+      "name": "Lecteur de citations",
+      "description": "Navigateur séquentiel de citations"
+    },
+    "split": {
+      "name": "Diviser une catégorie",
+      "description": "Divise un code en sous-codes"
+    },
+    "redundancies": {
+      "name": "Redondances",
+      "description": "Recherche de citations quasi-dupliquées"
+    },
+    "extractor": {
+      "name": "Extracteur de données",
+      "description": "Export de matrice de variables"
+    },
+    "literature": {
+      "name": "Revue de littérature",
+      "description": "Synthèse basée sur les mémos"
+    },
+    "links": {
+      "name": "Liens",
+      "description": "Gestion des liens entre segments"
+    }
+  },
+  "select_tool": "Sélectionnez un outil pour voir les résultats",
+  "no_data_for_tool": "Pas assez de données pour cet outil.",
+  "lexical": {
+    "search_placeholder": "Rechercher un terme...",
+    "regex": "Regex",
+    "fuzzy": "Approximative",
+    "case_sensitive": "Majuscules",
+    "whole_word": "Mot entier",
+    "all_categories": "Toutes les catégories",
+    "all_docs": "Tous les documents",
+    "all_researchers": "Tous les chercheurs",
+    "word": "Mot",
+    "frequency": "Fréquence",
+    "n_docs": "Documents",
+    "n_segments": "Segments",
+    "distribution": "Distribution",
+    "kwic_context": "Contexte KWIC"
+  },
+  "concordance": {
+    "researcher_a": "Chercheur A",
+    "researcher_b": "Chercheur B",
+    "method": "Méthode",
+    "kappa": "Kappa de Cohen",
+    "alpha": "Alpha de Krippendorff",
+    "simple": "% Accord simple",
+    "perfect": "Accord presque parfait",
+    "substantial": "Accord substantiel",
+    "moderate": "Accord modéré",
+    "weak": "Accord faible",
+    "calibration": "Exercice de calibration"
+  }
+}

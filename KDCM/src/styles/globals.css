@@ -1,0 +1,168 @@
+/* ─────────────────────────────────────────────
+   KDCM Design System — globals.css
+
+   Layers:  tokens → base → print → reduced-motion
+   Never edit this file manually without linting
+   contrast ratios.
+   ───────────────────────────────────────────── */
+
+/* ════════════════════════════════════════════
+   DESIGN TOKENS
+   ════════════════════════════════════════════ */
+
+:root {
+  /* Backgrounds */
+  --bg-primary:    #FFFFFF;
+  --bg-secondary:  #F5F5F5;
+  --bg-panel:      #FAFAFA;
+
+  /* Text */
+  --text-primary:   #1A1A1A;
+  --text-secondary: #6B6B6B;
+
+  /* Borders & shadows */
+  --border: #E5E5E5;
+  --shadow: rgba(0, 0, 0, 0.08);
+
+  /* Brand — #F1D7FF with opacity variants */
+  --peach: #F1D7FF;
+  --peach-50: rgba(241, 215, 255, 0.5);
+  --peach-80: rgba(241, 215, 255, 0.8);
+
+  /* Timing */
+  --t-fast:   150ms ease-in-out;
+  --t-normal: 250ms ease-in-out;
+  --t-slow:   400ms ease-out;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--peach);
+}
+
+/* ════════════════════════════════════════════
+   DARK THEME  [data-theme="dark"]
+   ════════════════════════════════════════════ */
+
+[data-theme="dark"] {
+  --bg-primary:    #1E2A3A;
+  --bg-secondary:  #0F172A;
+  --bg-panel:      #162032;
+
+  --text-primary:   #E2E8F0;
+  --text-secondary: #94A3B8;
+
+  --border: #2D3F55;
+  --shadow: rgba(0, 0, 0, 0.3);
+
+  --peach: #F1D7FF;
+  --peach-50: rgba(241, 215, 255, 0.5);
+  --peach-80: rgba(241, 215, 255, 0.8);
+
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--peach);
+}
+
+/* ════════════════════════════════════════════
+   BASE STYLES
+   ════════════════════════════════════════════ */
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  /* Smooth theme transitions */
+  transition: background-color var(--t-normal),
+              color var(--t-normal);
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ════════════════════════════════════════════
+   ACCESSIBILITY — Focus visible
+   WCAG 2.4.7: Focus indicator on all interactive
+   ════════════════════════════════════════════ */
+
+/* Global focus-visible ring */
+*:focus-visible {
+  outline: 2px solid var(--peach);
+  outline-offset: 2px;
+}
+
+/* Suppress the default focus ring for mouse users
+   (browser handles this via :focus-visible heuristics) */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Minimum touch target helper — use on icon-only buttons */
+.min-touch {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* ════════════════════════════════════════════
+   PREFERS-REDUCED-MOTION
+   ════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ════════════════════════════════════════════
+   PRINT
+   ════════════════════════════════════════════ */
+
+@media print {
+  /* Mono logo for print */
+  .kdcm-logo {
+    filter: grayscale(1);
+  }
+
+  /* Hide chrome */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Force white background */
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Reasonable page margins */
+  @page {
+    margin: 2cm;
+  }
+}
+
+/* ════════════════════════════════════════════
+   CUSTOM SCROLLBAR
+   ════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9E9E9E;
+}
